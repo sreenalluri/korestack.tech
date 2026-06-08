@@ -172,14 +172,8 @@ function initReveals(scope = document) {
   bars.forEach(el => bo.observe(el));
 }
 
-// ===== Form submit — EmailJS =====
-// Replace the three placeholders below with your EmailJS credentials.
-// Setup: emailjs.com → Add Service → Add Template → copy keys here.
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-
-emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+// ===== Form submit — FormSubmit AJAX =====
+const CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/hello@korestack.tech';
 
 const SUCCESS_HTML =
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -214,13 +208,19 @@ function handleSubmit(evt) {
   const message = get('cf-message');
   const fullName = `${first} ${last}`.trim();
 
-  const templateParams = {
-    from_name:  fullName || '(not provided)',
-    from_email: email    || '(not provided)',
-    company:    company  || '(not provided)',
-    service:    service  || '(not specified)',
-    message:    message  || '(no message)',
-    subject:    `New Korestack inquiry from ${fullName}${service ? ' — ' + service : ''}`,
+  const subjectParts = ['New Korestack inquiry'];
+  if (fullName) subjectParts.push(`from ${fullName}`);
+  if (service)  subjectParts.push(`— ${service}`);
+
+  const payload = {
+    'Name':             fullName || '(not provided)',
+    'Email':            email    || '(not provided)',
+    'Company':          company  || '(not provided)',
+    'Service interest': service  || '(not specified)',
+    'Message':          message  || '(no message)',
+    _subject:           subjectParts.join(' '),
+    _template:          'table',
+    _captcha:           'false',
   };
 
   const originalHTML = btn.innerHTML;
@@ -228,20 +228,33 @@ function handleSubmit(evt) {
   btn.innerHTML = 'Sending…';
   msg.classList.remove('show', 'error');
 
-  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
-    .then(() => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 10000);
+
+  fetch(CONTACT_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload),
+    signal: controller.signal,
+  })
+    .then((r) => r.json().catch(() => ({})))
+    .then((data) => {
+      const ok = data && (data.success === 'true' || data.success === true);
+      if (!ok) throw new Error(data?.message || 'submission failed');
+
       msg.innerHTML = SUCCESS_HTML;
       msg.classList.add('show');
       form.reset();
       setTimeout(() => msg.classList.remove('show'), 5000);
     })
     .catch((err) => {
-      console.error('EmailJS error:', err);
+      console.error('Contact form error:', err);
       msg.innerHTML = ERROR_HTML;
       msg.classList.add('show', 'error');
       setTimeout(() => msg.classList.remove('show', 'error'), 6000);
     })
     .finally(() => {
+      clearTimeout(timeout);
       btn.disabled = false;
       btn.innerHTML = originalHTML;
     });
