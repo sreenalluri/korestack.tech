@@ -172,14 +172,14 @@ function initReveals(scope = document) {
   bars.forEach(el => bo.observe(el));
 }
 
-// ===== Form submit =====
-// Sends the contact form to hello@korestack.tech via FormSubmit's AJAX
-// endpoint. The page never reloads, no email client is ever opened.
-//
-// FIRST-TIME SETUP: the very first submission triggers a confirmation
-// email to hello@korestack.tech. Click the activation link inside that
-// email once — after that, all future submissions are forwarded silently.
-const CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/hello@korestack.tech';
+// ===== Form submit — EmailJS =====
+// Replace the three placeholders below with your EmailJS credentials.
+// Setup: emailjs.com → Add Service → Add Template → copy keys here.
+const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+
+emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
 const SUCCESS_HTML =
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -202,7 +202,7 @@ function handleSubmit(evt) {
   const msg  = document.getElementById('success-msg');
   if (!form || !btn || !msg) return;
 
-  // Honeypot — bots fill hidden fields; if filled, silently drop
+  // Honeypot — bots fill hidden fields; real users don't
   if (form.querySelector('[name="_honey"]')?.value) return;
 
   const get = (id) => (document.getElementById(id)?.value || '').trim();
@@ -214,48 +214,29 @@ function handleSubmit(evt) {
   const message = get('cf-message');
   const fullName = `${first} ${last}`.trim();
 
-  // Build a scannable inbox subject line
-  const subjectParts = ['New Korestack inquiry'];
-  if (fullName) subjectParts.push(`from ${fullName}`);
-  if (service)  subjectParts.push(`— ${service}`);
-
-  // FormSubmit AJAX expects JSON; readable labels become the email rows
-  const payload = {
-    'Name':             fullName || '(not provided)',
-    'Email':            email    || '(not provided)',
-    'Company':          company  || '(not provided)',
-    'Service interest': service  || '(not specified)',
-    'Message':          message  || '(no message)',
-    _subject:           subjectParts.join(' '),
-    _template:          'table',
-    _captcha:           'false',
+  const templateParams = {
+    from_name:  fullName || '(not provided)',
+    from_email: email    || '(not provided)',
+    company:    company  || '(not provided)',
+    service:    service  || '(not specified)',
+    message:    message  || '(no message)',
+    subject:    `New Korestack inquiry from ${fullName}${service ? ' — ' + service : ''}`,
   };
 
-  // Loading state on button
   const originalHTML = btn.innerHTML;
   btn.disabled = true;
   btn.innerHTML = 'Sending…';
-
-  // Clean prior state on the message banner
   msg.classList.remove('show', 'error');
 
-  fetch(CONTACT_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(payload),
-  })
-    .then((r) => r.json().catch(() => ({})))
-    .then((data) => {
-      const ok = data && (data.success === 'true' || data.success === true);
-      if (!ok) throw new Error(data?.message || 'submission failed');
-
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+    .then(() => {
       msg.innerHTML = SUCCESS_HTML;
       msg.classList.add('show');
       form.reset();
       setTimeout(() => msg.classList.remove('show'), 5000);
     })
     .catch((err) => {
-      console.error('Contact form submission failed:', err);
+      console.error('EmailJS error:', err);
       msg.innerHTML = ERROR_HTML;
       msg.classList.add('show', 'error');
       setTimeout(() => msg.classList.remove('show', 'error'), 6000);
