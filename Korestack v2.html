@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Korestack.tech — Helping Businesses Accelerate Growth</title>
+<meta name="description" content="Korestack helps small businesses accelerate growth with AI — connecting them with expert consultants who build, train, and scale AI solutions."/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&family=DM+Serif+Display:ital@0;1&family=Pacifico&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="korestack-styles.css"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home', event)">
+    <svg class="nav-pyramid" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="nav-logo-grad" x1="0" y1="0" x2="0.7" y2="1">
+          <stop offset="0%" stop-color="#534AB7"/>
+          <stop offset="100%" stop-color="#26215C"/>
+        </linearGradient>
+      </defs>
+      <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+      <g transform="translate(10, 11)">
+        <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+        <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+        <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+      </g>
+    </svg>
+    <div class="nav-divider"></div>
+    <div>
+      <div class="nav-wordmark">Korestack</div>
+      <div class="nav-sub" style="font-size: 11px">.tech</div>
+    </div>
+  </a>
+  <button class="nav-toggle" aria-label="Toggle menu" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links">
+    <a data-page="home" onclick="showPage('home', event)">Home</a>
+    <a data-page="services" onclick="showPage('services', event)">Services</a>
+    <a data-page="contact" onclick="showPage('contact', event)" class="nav-cta" style="padding: 8px 18px; font-size: 12px; text-align: center; background: #21305c;">Contact Us</a>
+  </div>
+</nav>
+
+<!-- Curtain overlay for curtain transition -->
+<div class="page-curtain">
+  <div class="curtain-mark">
+    <svg width="44" height="42" viewBox="0 0 36 34" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="23" width="36" height="9" rx="2" fill="#5DCAA5"/>
+      <rect x="5" y="12" width="26" height="9" rx="2" fill="#AFA9EC"/>
+      <rect x="10" y="1" width="16" height="9" rx="2" fill="#fff"/>
+    </svg>
+    <div style="font-family:'Nunito',sans-serif;color:#fff;font-size:18px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;">Korestack</div>
+  </div>
+</div>
+
+<div class="page-stage">
+
+<!-- ════════════════════════════════════
+     HOME PAGE
+════════════════════════════════════ -->
+<div id="page-home" class="page active" data-screen-label="01 Home">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-mesh">
+      <div class="mesh-blob one"></div>
+      <div class="mesh-blob two"></div>
+      <div class="mesh-blob three"></div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true" style="align-items: center; justify-content: center; width: 100%; max-width: 760px">
+      <div class="hv-stage" style="width: 100%; max-width: 760px; margin: 10px auto">
+        <!-- connection lines (viewBox 600×600) -->
+        <svg class="hv-net" viewBox="0 0 600 600" preserveAspectRatio="none">
+          <line x1="300" y1="300" x2="165" y2="165"/>
+          <line x1="300" y1="300" x2="435" y2="165"/>
+          <line x1="300" y1="300" x2="165" y2="435"/>
+          <line x1="300" y1="300" x2="435" y2="435"/>
+        </svg>
+
+        <!-- orchestrator core -->
+        <div class="hv-core">
+          <div style="position:relative;display:flex;align-items:center;justify-content:center;">
+            <div class="hv-core-pulse"></div>
+            <div class="hv-core-pulse delay"></div>
+            <div class="hv-core-mark">
+              <svg viewBox="0 0 36 34" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0"  y="23" width="36" height="9" rx="2" fill="#5DCAA5"/>
+                <rect x="5"  y="12" width="26" height="9" rx="2" fill="#AFA9EC"/>
+                <rect x="10" y="1"  width="16" height="9" rx="2" fill="#fff"/>
+              </svg>
+            </div>
+          </div>
+          <div class="hv-core-label">Orchestrator</div>
+        </div>
+
+        <!-- 4 agent pills at corners (positions match line endpoints) -->
+        <div class="hv-agent purple" style="top:27.5%;left:27.5%;">
+          <span class="hv-dot"></span>
+          <span class="hv-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18v3h3l6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2-2 2.6-2.6z"/></svg>
+          </span>
+          Build
+        </div>
+        <div class="hv-agent" style="top:27.5%;left:72.5%;">
+          <span class="hv-dot"></span>
+          <span class="hv-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M16 8a4 4 0 0 1 0 8"/></svg>
+          </span>
+          Consult
+        </div>
+        <div class="hv-agent" style="top:72.5%;left:27.5%;">
+          <span class="hv-dot"></span>
+          <span class="hv-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg>
+          </span>
+          Grow
+        </div>
+        <div class="hv-agent purple" style="top:72.5%;left:72.5%;">
+          <span class="hv-dot"></span>
+          <span class="hv-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </span>
+          Support
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-content" style="font-family: &quot;DM Sans&quot;; width: 100%; max-width: 760px; align-self: start; padding: 64px 0 0;">
+      <div class="hero-badge" style="gap: 8px">
+        <div class="hero-badge-dot"></div>
+        AI-First Consulting & Services
+      </div>
+      <h1 style="font-family: Tahoma; margin: 0px 0px 24px">
+        <span class="h1-word">Helping</span>
+        <span class="h1-word">businesses</span><br/>
+        <em><span class="h1-word">accelerate</span> <span class="h1-word">growth</span></em>
+      </h1>
+      <p class="hero-sub reveal" data-delay="3" style="font-family: &quot;Avenir Next&quot;; color: rgb(0, 0, 0); font-weight: 500; margin: 0px 0px 40px">Korestack connects small businesses with human AI-ready experts who build, deploy, and scale AI solutions — FAST. No Fluff, No Long Timelines. Just Results.</p>
+      <div class="hero-actions reveal" data-delay="4">
+        <button class="btn-primary" onclick="showPage('services')" style="background: #21305c;">Explore Services <span class="arrow">→</span></button>
+        <button class="btn-secondary" onclick="showPage('contact')">Talk to an Expert</button>
+      </div>
+    </div>
+
+    <!-- wave that ties the hero into the page below -->
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 180" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="heroWaveGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#534AB7"/>
+            <stop offset="50%" stop-color="#7C74D0"/>
+            <stop offset="100%" stop-color="#1D9E75"/>
+          </linearGradient>
+        </defs>
+        <path class="wave-back" fill="url(#heroWaveGrad)" fill-opacity="0.10"
+          d="M0,90 C240,150 480,30 720,90 C960,150 1200,30 1440,90 L1440,180 L0,180 Z"/>
+        <path class="wave-mid" fill="url(#heroWaveGrad)" fill-opacity="0.16"
+          d="M0,110 C240,60 480,170 720,110 C960,50 1200,160 1440,110 L1440,180 L0,180 Z"/>
+        <path class="wave-line" fill="none" stroke="url(#heroWaveGrad)" stroke-width="2" stroke-opacity="0.55"
+          d="M0,90 C240,150 480,30 720,90 C960,150 1200,30 1440,90"/>
+      </svg>
+    </div>
+  </div>
+  <section class="why">
+    <div class="why-grid">
+      <div class="why-left" style="padding: 30px">
+        <p class="section-eyebrow reveal" style="color: #324d39">Why Korestack</p>
+        <h2 class="section-title reveal" data-delay="1">AI expertise,<br/>without the enterprise<br/>price tag.</h2>
+        <p class="section-body reveal" data-delay="2" style="margin-bottom:40px;">Most small businesses know they need AI. They just don't know where to start — or who to trust. Korestack changes that.</p>
+        <div class="why-items">
+          <div class="why-item reveal" data-delay="1">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">We move fast</div>
+              <div class="why-item-body">From first call to first delivery in weeks, not months. Speed is our edge and your advantage.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="2">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-2 7.5A4 4 0 0 0 8 22h8a4 4 0 0 0 2-7.5A4 4 0 0 0 16 7V6a4 4 0 0 0-4-4z"/><path d="M12 11v11"/><path d="M9 14h6"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Real AI experts</div>
+              <div class="why-item-body">Every consultant is human, AI-ready, and vetted. No offshore generalists. No chatbots doing your strategy.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="3">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Built for your business</div>
+              <div class="why-item-body">We design solutions around how you actually work — not generic templates built for Fortune 500 companies.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="4">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Growth-focused outcomes</div>
+              <div class="why-item-body">Every engagement is tied to measurable business outcomes. We don't just build — we make sure it works.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="why-visual reveal" style="padding: 48px 40px; background: #21305c;">
+        <div class="why-visual-quote">
+          Small businesses deserve <em style="color: var(--teal-light)">enterprise-grade AI</em> — without the enterprise wait.
+        </div>
+        <div class="why-visual-bars">
+          <div class="bar-row">
+            <div class="bar-label">Speed</div>
+            <div class="bar-track"><div class="bar-fill purple" data-w="94"></div></div>
+            <div class="bar-pct">94%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Expertise</div>
+            <div class="bar-track"><div class="bar-fill teal" data-w="98"></div></div>
+            <div class="bar-pct">98%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Value</div>
+            <div class="bar-track"><div class="bar-fill purple" data-w="90"></div></div>
+            <div class="bar-pct">90%</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Results</div>
+            <div class="bar-track"><div class="bar-fill teal" data-w="96"></div></div>
+            <div class="bar-pct">96%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-banner" style="background-color: rgb(33, 48, 92)">
+    <p class="cta-eyebrow reveal">Ready to move fast?</p>
+    <h2 class="cta-title reveal" data-delay="1">Let's <em style="color: rgb(93, 202, 165)">build</em> something together.</h2>
+    <button class="btn-primary reveal" data-delay="2" style="background: #fff; color: rgb(13, 14, 14); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="showPage('contact')">Get Started Today <span class="arrow">→</span></button>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+        <g transform="translate(10, 11)">
+          <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+          <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+          <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+        </g>
+      </svg>
+      <span class="footer-copy">© 2026 Korestack.tech · Houston, TX</span>
+    </div>
+    <div class="footer-links">
+      <a onclick="showPage('services', event)">Services</a>
+      <a onclick="showPage('careers', event)">Careers</a>
+      <a onclick="showPage('contact', event)">Contact</a>
+      <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════
+     SERVICES PAGE
+════════════════════════════════════ -->
+<div id="page-services" class="page" data-screen-label="02 Services">
+
+  <div class="services-hero" style="background: #21305c; color: #fff; border-radius: 18px;">
+    <p class="section-eyebrow reveal" style="color: var(--teal-light)">What we do</p>
+    <h1 class="section-title reveal" data-delay="1" style="color: #fff;">Services built for<br/>small business <em style="font-style: italic; color: var(--teal-light)">scale</em>.</h1>
+    <p class="section-body reveal" data-delay="2" style="color: rgba(255,255,255,0.7);">From strategy to implementation, Korestack delivers AI solutions that fit your team, your budget, and your goals — with speed as our standard.</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card purple reveal" data-delay="1">
+      <div class="service-number">01</div>
+      <div class="service-title">AI Strategy & Roadmapping</div>
+      <p class="service-desc">Not sure where AI fits in your business? We map the opportunity, prioritize the wins, and give you a clear path forward — in days, not months.</p>
+      <ul class="service-list">
+        <li>AI readiness assessment</li>
+        <li>Use-case identification & prioritization</li>
+        <li>90-day AI growth roadmap</li>
+        <li>ROI modeling & business case</li>
+      </ul>
+    </div>
+    <div class="service-card teal reveal" data-delay="2">
+      <div class="service-number">02</div>
+      <div class="service-title">AI Implementation & Engineering</div>
+      <p class="service-desc">We build and deploy AI solutions that actually work in the real world — integrated into your existing tools, workflows, and teams.</p>
+      <ul class="service-list">
+        <li>Custom AI tool development</li>
+        <li>LLM integration & fine-tuning</li>
+        <li>Workflow automation with AI</li>
+        <li>API & system integrations</li>
+      </ul>
+    </div>
+    <div class="service-card purple reveal" data-delay="3">
+      <div class="service-number">03</div>
+      <div class="service-title">AI Training & Enablement</div>
+      <p class="service-desc">Empower your team to use AI confidently and effectively. We deliver hands-on training tailored to how your business actually operates.</p>
+      <ul class="service-list">
+        <li>Team AI literacy workshops</li>
+        <li>Role-specific AI playbooks</li>
+        <li>Prompt engineering training</li>
+        <li>Ongoing coaching & support</li>
+      </ul>
+    </div>
+    <div class="service-card teal reveal" data-delay="4">
+      <div class="service-number">04</div>
+      <div class="service-title">Fractional AI Consulting</div>
+      <p class="service-desc">Get an expert AI consultant in your corner without the cost of a full-time hire. Flexible, fast, and deeply invested in your growth.</p>
+      <ul class="service-list">
+        <li>Dedicated AI advisor (part-time)</li>
+        <li>Monthly strategy sessions</li>
+        <li>Vendor & tool evaluation</li>
+        <li>On-call expert access</li>
+      </ul>
+    </div>
+    <div class="service-card purple reveal" data-delay="5">
+      <div class="service-number">05</div>
+      <div class="service-title">Data & Analytics</div>
+      <p class="service-desc">Turn your business data into decisions. We build dashboards, reporting pipelines, and AI-powered insights that help you act fast and smart.</p>
+      <ul class="service-list">
+        <li>Data audit & cleanup</li>
+        <li>Business intelligence dashboards</li>
+        <li>Predictive analytics models</li>
+        <li>KPI tracking & reporting</li>
+      </ul>
+    </div>
+    <div class="service-card teal reveal" data-delay="6">
+      <div class="service-number">06</div>
+      <div class="service-title">Growth Acceleration Programs</div>
+      <p class="service-desc">A structured, end-to-end engagement to take your business from AI-curious to AI-powered — with measurable growth milestones at every step.</p>
+      <ul class="service-list">
+        <li>Full-stack AI transformation</li>
+        <li>30/60/90 day sprint programs</li>
+        <li>Progress tracking & reporting</li>
+        <li>Post-launch optimization</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Process -->
+  <section class="process">
+    <p class="section-eyebrow reveal">How it works</p>
+    <h2 class="section-title reveal" data-delay="1">From first call to <em style="font-style: italic; color: rgb(93, 202, 165)">real results</em> — fast.</h2>
+    <div class="process-steps reveal" data-delay="2">
+      <div class="process-step" style="background-color: rgb(253, 252, 255)">
+        <div class="step-num" style="opacity: 1; border-width: 0px; border-style: solid; border-color: rgb(54, 53, 77)">01</div>
+        <div class="step-title">Discover</div>
+        <p class="step-desc">We learn your business, your goals, and where AI can make the biggest difference — in one focused call.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Plan</div>
+        <p class="step-desc">We deliver a tailored roadmap with clear priorities, timelines, and expected outcomes within days.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Build</div>
+        <p class="step-desc">Our experts get to work — building, integrating, and testing solutions that fit how you operate.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Scale</div>
+        <p class="step-desc">We hand over the keys, train your team, and stay available to optimize as your business grows.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner" style="background-color: rgb(33, 48, 92)">
+    <p class="cta-eyebrow reveal">Ready to get started?</p>
+    <h2 class="cta-title reveal" data-delay="1">Your AI journey starts<br/>with <em style="color: rgb(93, 202, 165)">one conversation.</em></h2>
+    <p class="reveal" data-delay="2" style="font-size:16px;color:rgba(255,255,255,0.65);margin:-12px auto 32px;font-weight:500;max-width:480px;">No commitment. No jargon. Just a real conversation about what's possible for your business.</p>
+    <button class="btn-primary reveal" data-delay="3" style="background: #fff; color: rgb(26, 28, 28); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="showPage('contact')">Book a Free Discovery Call <span class="arrow">→</span></button>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+        <g transform="translate(10, 11)">
+          <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+          <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+          <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+        </g>
+      </svg>
+      <span class="footer-copy">© 2026 Korestack.tech · Houston, TX</span>
+    </div>
+    <div class="footer-links">
+      <a onclick="showPage('home', event)">Home</a>
+      <a onclick="showPage('careers', event)">Careers</a>
+      <a onclick="showPage('contact', event)">Contact</a>
+      <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════
+     CONTACT PAGE
+════════════════════════════════════ -->
+<div id="page-contact" class="page" data-screen-label="03 Contact">
+  <div class="contact-layout">
+
+    <div class="contact-left" style="background: #21305c;">
+      <p class="section-eyebrow reveal">Get in touch</p>
+      <h2 class="section-title reveal" data-delay="1">Let's talk about<br/>your <em style="font-style:italic;color:var(--teal-light);">growth.</em></h2>
+      <p class="section-body reveal" data-delay="2">Whether you're just exploring AI or ready to move fast, our team is here to help. Reach out and we'll get back to you within 24 hours.</p>
+
+      <div class="contact-info">
+        <div class="contact-info-item reveal" data-delay="1">
+          <div class="contact-info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Email</div>
+            <div class="contact-info-value">hello@korestack.tech</div>
+          </div>
+        </div>
+        <div class="contact-info-item reveal" data-delay="2">
+          <div class="contact-info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13z"/><circle cx="12" cy="9" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Location</div>
+            <div class="contact-info-value">Houston, Texas — serving clients nationwide</div>
+          </div>
+        </div>
+        <div class="contact-info-item reveal" data-delay="3">
+          <div class="contact-info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Response time</div>
+            <div class="contact-info-value">Within 24 hours, guaranteed</div>
+          </div>
+        </div>
+        <div class="contact-info-item reveal" data-delay="4">
+          <div class="contact-info-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="contact-info-label">Discovery call</div>
+            <div class="contact-info-value">Free 30-minute consultation</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-right">
+      <div class="form-title reveal">Send us a message</div>
+      <p class="form-sub reveal" data-delay="1">Fields marked are everything we need to get the conversation started.</p>
+      <form id="contact-form" onsubmit="handleSubmit(event)" action="https://formsubmit.co/hello@korestack.tech" method="POST">
+        <!-- spam honeypot — bots fill hidden fields, real users don't -->
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off"/>
+        <!-- skip FormSubmit's captcha page (we handle UX in JS) -->
+        <input type="hidden" name="_captcha" value="false"/>
+        <!-- table-formatted email body -->
+        <input type="hidden" name="_template" value="table"/>
+        <div class="form-row reveal" data-delay="2">
+          <div class="form-group">
+            <label class="form-label" for="cf-first">First name</label>
+            <input class="form-input" id="cf-first" name="firstName" type="text" placeholder="Jane" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cf-last">Last name</label>
+            <input class="form-input" id="cf-last" name="lastName" type="text" placeholder="Smith" required/>
+          </div>
+        </div>
+        <div class="form-group reveal" data-delay="3">
+          <label class="form-label" for="cf-email">Business email</label>
+          <input class="form-input" id="cf-email" name="email" type="email" placeholder="jane@yourcompany.com" required/>
+        </div>
+        <div class="form-group reveal" data-delay="3">
+          <label class="form-label" for="cf-company">Company name</label>
+          <input class="form-input" id="cf-company" name="company" type="text" placeholder="Your company"/>
+        </div>
+        <div class="form-group reveal" data-delay="4">
+          <label class="form-label" for="cf-service">I'm interested in</label>
+          <select class="form-select" id="cf-service" name="service">
+            <option value="">Select a service...</option>
+            <option>AI Strategy & Roadmapping</option>
+            <option>AI Implementation & Engineering</option>
+            <option>AI Training & Enablement</option>
+            <option>Fractional AI Consulting</option>
+            <option>Data & Analytics</option>
+            <option>Growth Acceleration Program</option>
+            <option>Not sure yet — let's talk</option>
+          </select>
+        </div>
+        <div class="form-group reveal" data-delay="4">
+          <label class="form-label" for="cf-message">Tell us about your business</label>
+          <textarea class="form-textarea" id="cf-message" name="message" placeholder="What are you trying to accomplish? What challenges are you facing?"></textarea>
+        </div>
+        <button type="submit" class="form-submit reveal" data-delay="5">Send Message <span class="arrow">→</span></button>
+        <div class="success-msg" id="success-msg">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          Message sent! We'll be in touch within 24 hours.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-left">
+      <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+        <g transform="translate(10, 11)">
+          <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+          <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+          <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+        </g>
+      </svg>
+      <span class="footer-copy">© 2026 Korestack.tech · Houston, TX</span>
+    </div>
+    <div class="footer-links">
+      <a onclick="showPage('home', event)">Home</a>
+      <a onclick="showPage('services', event)">Services</a>
+      <a onclick="showPage('careers', event)">Careers</a>
+      <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════
+     CAREERS PAGE
+════════════════════════════════════ -->
+<div id="page-careers" class="page" data-screen-label="04 Careers">
+
+  <div class="services-hero" style="background: #21305c; color: #fff; border-radius: 18px;">
+    <p class="section-eyebrow reveal" style="color: var(--teal-light)">Careers</p>
+    <h1 class="section-title reveal" data-delay="1" style="color: #fff;">Build what's next in<br/><em style="font-style: italic; color: var(--teal-light)">AI for small business.</em></h1>
+    <p class="section-body reveal" data-delay="2" style="color: rgba(255,255,255,0.7);">We're a small, senior team helping small businesses move fast with AI. If you love shipping, working directly with clients, and want your work to actually matter — we'd love to hear from you.</p>
+  </div>
+
+  <section class="why">
+    <div class="why-grid">
+      <div class="why-left" style="padding: 30px">
+        <p class="section-eyebrow reveal" style="color: #324d39">Why Korestack</p>
+        <h2 class="section-title reveal" data-delay="1">A team built for<br/>speed, ownership,<br/>and real impact.</h2>
+        <p class="section-body reveal" data-delay="2" style="margin-bottom:40px;">No layers. No politics. Just smart people solving real problems for businesses that need the help.</p>
+        <div class="why-items">
+          <div class="why-item reveal" data-delay="1">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Move fast, ship real things</div>
+              <div class="why-item-body">From kickoff to delivery in weeks. You'll see your work in production — and in client results — almost immediately.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="2">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Own your work end-to-end</div>
+              <div class="why-item-body">Talk to clients, scope the problem, build the solution, hand it off. No tickets thrown over a wall.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="3">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v1a4 4 0 0 0-2 7.5A4 4 0 0 0 8 22h8a4 4 0 0 0 2-7.5A4 4 0 0 0 16 7V6a4 4 0 0 0-4-4z"/><path d="M12 11v11"/><path d="M9 14h6"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Work with senior peers</div>
+              <div class="why-item-body">Every consultant is vetted and experienced. You'll learn from people who've shipped real AI in real businesses.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="4">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Remote-first, results-first</div>
+              <div class="why-item-body">Work from anywhere. We care about what you deliver — not when or where you're sitting.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="why-visual reveal" style="padding: 40px 32px; background: linear-gradient(155deg, #21305c 0%, #1a1645 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 540px;">
+        <svg viewBox="0 0 480 560" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; max-width: 440px;" aria-label="Illustration of a diverse team working together">
+          <defs>
+            <radialGradient id="careers-glow" cx="0.5" cy="0.35" r="0.6">
+              <stop offset="0%" stop-color="rgba(93,202,165,0.28)"/>
+              <stop offset="100%" stop-color="rgba(93,202,165,0)"/>
+            </radialGradient>
+            <linearGradient id="careers-floor" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(175,169,236,0.18)"/>
+              <stop offset="100%" stop-color="rgba(175,169,236,0)"/>
+            </linearGradient>
+          </defs>
+
+          <!-- soft glow behind team -->
+          <rect x="0" y="0" width="480" height="560" fill="url(#careers-glow)"/>
+
+          <!-- abstract tech rings -->
+          <g fill="none" stroke="rgba(175,169,236,0.18)" stroke-width="1">
+            <circle cx="240" cy="270" r="200"/>
+            <circle cx="240" cy="270" r="155"/>
+          </g>
+
+          <!-- accent dots -->
+          <g fill="#5DCAA5" opacity="0.7">
+            <circle cx="70" cy="120" r="3"/>
+            <circle cx="410" cy="140" r="3"/>
+            <circle cx="55" cy="340" r="3"/>
+            <circle cx="425" cy="370" r="3"/>
+          </g>
+          <g fill="#AFA9EC" opacity="0.5">
+            <circle cx="100" cy="80" r="2"/>
+            <circle cx="380" cy="90" r="2"/>
+            <circle cx="40" cy="240" r="2"/>
+            <circle cx="440" cy="250" r="2"/>
+          </g>
+
+          <!-- small connection lines -->
+          <g stroke="rgba(93,202,165,0.25)" stroke-width="1" stroke-dasharray="2 4">
+            <line x1="70" y1="120" x2="100" y2="80"/>
+            <line x1="410" y1="140" x2="380" y2="90"/>
+          </g>
+
+          <!-- floor shadow under the group -->
+          <ellipse cx="240" cy="520" rx="180" ry="10" fill="rgba(0,0,0,0.35)"/>
+
+          <!-- ═══ PERSON 1 (far left): light skin, dark short hair, teal shirt ═══ -->
+          <g transform="translate(95, 290)">
+            <!-- shirt -->
+            <path d="M-48,42 Q-48,2 -22,2 L22,2 Q48,2 48,42 L48,230 L-48,230 Z" fill="#1D9E75"/>
+            <path d="M-48,42 Q-48,2 -22,2 L0,2 L0,230 L-48,230 Z" fill="#5DCAA5" opacity="0.25"/>
+            <!-- collar v -->
+            <path d="M-14,2 L0,22 L14,2 Z" fill="#0F6E56"/>
+            <!-- neck -->
+            <path d="M-11,-18 L-11,6 L11,6 L11,-18 Z" fill="#f4d4b3"/>
+            <!-- head -->
+            <circle cx="0" cy="-38" r="30" fill="#f4d4b3"/>
+            <!-- hair: short, side-swept -->
+            <path d="M-30,-38 Q-30,-70 0,-70 Q30,-70 30,-38 Q24,-58 6,-56 Q-22,-54 -30,-38 Z" fill="#2a1810"/>
+            <!-- ears -->
+            <ellipse cx="-28" cy="-36" rx="3" ry="6" fill="#e6b894"/>
+            <ellipse cx="28" cy="-36" rx="3" ry="6" fill="#e6b894"/>
+            <!-- subtle face features -->
+            <circle cx="-9" cy="-38" r="1.5" fill="#2a1810"/>
+            <circle cx="9" cy="-38" r="1.5" fill="#2a1810"/>
+            <path d="M-6,-26 Q0,-22 6,-26" fill="none" stroke="#b07b56" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
+
+          <!-- ═══ PERSON 2: medium-dark skin, curly afro, purple shirt ═══ -->
+          <g transform="translate(190, 260)">
+            <!-- shirt -->
+            <path d="M-48,42 Q-48,2 -22,2 L22,2 Q48,2 48,42 L48,260 L-48,260 Z" fill="#534AB7"/>
+            <path d="M-48,42 Q-48,2 -22,2 L0,2 L0,260 L-48,260 Z" fill="#AFA9EC" opacity="0.22"/>
+            <!-- collar -->
+            <path d="M-14,2 L0,22 L14,2 Z" fill="#26215C"/>
+            <!-- neck -->
+            <path d="M-11,-18 L-11,6 L11,6 L11,-18 Z" fill="#8b5e3c"/>
+            <!-- head -->
+            <circle cx="0" cy="-38" r="30" fill="#8b5e3c"/>
+            <!-- curly afro hair (overlapping circles for texture) -->
+            <g fill="#1a0e08">
+              <circle cx="0" cy="-62" r="22"/>
+              <circle cx="-18" cy="-54" r="18"/>
+              <circle cx="18" cy="-54" r="18"/>
+              <circle cx="-26" cy="-40" r="14"/>
+              <circle cx="26" cy="-40" r="14"/>
+              <circle cx="-12" cy="-66" r="14"/>
+              <circle cx="12" cy="-66" r="14"/>
+            </g>
+            <!-- features -->
+            <circle cx="-9" cy="-38" r="1.5" fill="#1a0e08"/>
+            <circle cx="9" cy="-38" r="1.5" fill="#1a0e08"/>
+            <path d="M-7,-25 Q0,-20 7,-25" fill="none" stroke="#5d3a26" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
+
+          <!-- ═══ PERSON 3: medium skin, long hair, light teal shirt ═══ -->
+          <g transform="translate(290, 260)">
+            <!-- long hair (back) -->
+            <path d="M-34,-38 Q-34,-72 0,-72 Q34,-72 34,-38 L40,30 L-40,30 Z" fill="#4a2818"/>
+            <!-- shirt -->
+            <path d="M-48,42 Q-48,2 -22,2 L22,2 Q48,2 48,42 L48,260 L-48,260 Z" fill="#5DCAA5"/>
+            <path d="M-48,42 Q-48,2 -22,2 L0,2 L0,260 L-48,260 Z" fill="#fff" opacity="0.18"/>
+            <!-- collar (round neckline) -->
+            <ellipse cx="0" cy="6" rx="16" ry="8" fill="#1D9E75"/>
+            <!-- neck -->
+            <path d="M-11,-18 L-11,6 L11,6 L11,-18 Z" fill="#c8946a"/>
+            <!-- head -->
+            <circle cx="0" cy="-38" r="30" fill="#c8946a"/>
+            <!-- hair (front fringe) -->
+            <path d="M-30,-38 Q-30,-70 0,-70 Q30,-70 30,-38 Q26,-56 4,-54 Q-16,-52 -30,-38 Z" fill="#4a2818"/>
+            <!-- earring -->
+            <circle cx="-28" cy="-30" r="2" fill="#5DCAA5"/>
+            <circle cx="28" cy="-30" r="2" fill="#5DCAA5"/>
+            <!-- features -->
+            <circle cx="-9" cy="-38" r="1.5" fill="#3a2818"/>
+            <circle cx="9" cy="-38" r="1.5" fill="#3a2818"/>
+            <path d="M-6,-25 Q0,-21 6,-25" fill="none" stroke="#8b5a3c" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
+
+          <!-- ═══ PERSON 4 (far right): light-medium skin, glasses, lavender shirt ═══ -->
+          <g transform="translate(385, 290)">
+            <!-- shirt -->
+            <path d="M-48,42 Q-48,2 -22,2 L22,2 Q48,2 48,42 L48,230 L-48,230 Z" fill="#AFA9EC"/>
+            <path d="M-48,42 Q-48,2 -22,2 L0,2 L0,230 L-48,230 Z" fill="#fff" opacity="0.22"/>
+            <!-- collar -->
+            <path d="M-14,2 L0,22 L14,2 Z" fill="#534AB7"/>
+            <!-- neck -->
+            <path d="M-11,-18 L-11,6 L11,6 L11,-18 Z" fill="#e6b894"/>
+            <!-- head -->
+            <circle cx="0" cy="-38" r="30" fill="#e6b894"/>
+            <!-- hair: side part medium length -->
+            <path d="M-30,-38 Q-30,-70 0,-70 Q30,-70 30,-38 Q22,-60 -2,-58 Q-30,-56 -30,-38 Z" fill="#5a3a20"/>
+            <!-- ears -->
+            <ellipse cx="-28" cy="-36" rx="3" ry="6" fill="#c8946a"/>
+            <ellipse cx="28" cy="-36" rx="3" ry="6" fill="#c8946a"/>
+            <!-- glasses -->
+            <circle cx="-10" cy="-37" r="8.5" fill="rgba(255,255,255,0.08)" stroke="#1a1645" stroke-width="2"/>
+            <circle cx="10" cy="-37" r="8.5" fill="rgba(255,255,255,0.08)" stroke="#1a1645" stroke-width="2"/>
+            <line x1="-1.5" y1="-37" x2="1.5" y2="-37" stroke="#1a1645" stroke-width="2"/>
+            <!-- mouth -->
+            <path d="M-6,-25 Q0,-21 6,-25" fill="none" stroke="#8b5a3c" stroke-width="1.2" stroke-linecap="round"/>
+          </g>
+
+          <!-- subtle ground line tying the figures together -->
+          <rect x="40" y="490" width="400" height="60" fill="url(#careers-floor)"/>
+        </svg>
+
+        <div style="margin-top: 24px; text-align: center; font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1.3; color: #fff; max-width: 360px;">
+          Built by <em style="font-style: italic; color: var(--teal-light)">people</em>, for the people building what's next.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="services-grid">
+    <div class="service-card purple reveal" data-delay="1">
+      <div class="service-number">01</div>
+      <div class="service-title">AI Engineer</div>
+      <p class="service-desc">Build and deploy AI solutions for small business clients — from LLM integrations to custom tools that ship in weeks.</p>
+      <ul class="service-list">
+        <li>Strong Python &amp; modern AI tooling</li>
+        <li>LLM integration / fine-tuning experience</li>
+        <li>Comfortable owning client-facing work</li>
+        <li>Full-time · Remote</li>
+      </ul>
+    </div>
+    <div class="service-card teal reveal" data-delay="2">
+      <div class="service-number">02</div>
+      <div class="service-title">AI Consultant</div>
+      <p class="service-desc">Sit alongside small business leaders, map where AI fits, and turn it into a roadmap they can actually execute.</p>
+      <ul class="service-list">
+        <li>3+ years consulting or strategy</li>
+        <li>Deep AI/ML literacy</li>
+        <li>Excellent communicator</li>
+        <li>Full-time · Remote</li>
+      </ul>
+    </div>
+    <div class="service-card purple reveal" data-delay="3">
+      <div class="service-number">03</div>
+      <div class="service-title">Data &amp; Analytics Lead</div>
+      <p class="service-desc">Turn messy client data into dashboards, models, and decisions. Help small teams act on what their data is telling them.</p>
+      <ul class="service-list">
+        <li>SQL, Python, BI tooling</li>
+        <li>Experience building from scratch</li>
+        <li>Bias toward business outcomes</li>
+        <li>Full-time · Remote</li>
+      </ul>
+    </div>
+    <div class="service-card teal reveal" data-delay="4">
+      <div class="service-number">04</div>
+      <div class="service-title">Fractional Expert Network</div>
+      <p class="service-desc">Senior operators with deep domain experience who want to advise on a flexible, part-time basis across our client portfolio.</p>
+      <ul class="service-list">
+        <li>10+ years in your domain</li>
+        <li>Comfortable working part-time</li>
+        <li>Strong AI fluency</li>
+        <li>Contract · Remote</li>
+      </ul>
+    </div>
+  </div>
+
+  <section class="cta-banner" style="background-color: rgb(33, 48, 92)">
+    <p class="cta-eyebrow reveal">Don't see your role?</p>
+    <h2 class="cta-title reveal" data-delay="1">Send us a note <em style="color: rgb(93, 202, 165)">anyway.</em></h2>
+    <p class="reveal" data-delay="2" style="font-size:16px;color:rgba(255,255,255,0.65);margin:-12px auto 32px;font-weight:500;max-width:480px;">We're always open to talking with sharp people who care about building AI that actually helps small businesses.</p>
+    <button class="btn-primary reveal" data-delay="3" style="background: #fff; color: rgb(13, 14, 14); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="showPage('contact')">Get in Touch <span class="arrow">→</span></button>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+        <g transform="translate(10, 11)">
+          <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+          <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+          <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+        </g>
+      </svg>
+      <span class="footer-copy">© 2026 Korestack.tech · Houston, TX</span>
+    </div>
+    <div class="footer-links">
+      <a onclick="showPage('home', event)">Home</a>
+      <a onclick="showPage('services', event)">Services</a>
+      <a onclick="showPage('contact', event)">Contact</a>
+      <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
+    </div>
+  </footer>
+</div>
+
+</div><!-- /.page-stage -->
+
+<!-- TWEAKS PANEL -->
+<div class="tweaks-panel">
+  <div class="tweaks-head">
+    <div class="tweaks-title">Tweaks</div>
+    <button class="tweaks-close" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2l10 10M12 2L2 12"/></svg>
+    </button>
+  </div>
+
+  <div class="tweak-section">
+    <label class="tweak-label">Page transition</label>
+    <div class="tweak-segs">
+      <button class="tweak-seg" data-tweak="transition" data-value="slide">Slide</button>
+      <button class="tweak-seg" data-tweak="transition" data-value="blur">Blur</button>
+      <button class="tweak-seg" data-tweak="transition" data-value="curtain">Curtain</button>
+      <button class="tweak-seg" data-tweak="transition" data-value="instant">None</button>
+    </div>
+  </div>
+
+  <div class="tweak-section">
+    <label class="tweak-label">Hero background</label>
+    <div class="tweak-segs">
+      <button class="tweak-seg" data-tweak="background" data-value="mesh">Mesh</button>
+      <button class="tweak-seg" data-tweak="background" data-value="grid">Grid</button>
+      <button class="tweak-seg" data-tweak="background" data-value="clean">Clean</button>
+    </div>
+  </div>
+
+  <div class="tweak-section">
+    <label class="tweak-label">Accent</label>
+    <div class="tweak-segs">
+      <button class="tweak-seg" data-tweak="accent" data-value="balanced">Balanced</button>
+      <button class="tweak-seg" data-tweak="accent" data-value="purple">Purple</button>
+      <button class="tweak-seg" data-tweak="accent" data-value="teal">Teal</button>
+    </div>
+  </div>
+
+  <div class="tweak-foot">Toggle "Tweaks" in toolbar to hide</div>
+</div>
+
+<script src="korestack-app.js"></script>
+</body>
+</html>
