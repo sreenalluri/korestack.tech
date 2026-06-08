@@ -172,10 +172,8 @@ function initReveals(scope = document) {
   bars.forEach(el => bo.observe(el));
 }
 
-// ===== Form submit — Web3Forms =====
-// Get your free access key at web3forms.com — enter hello@korestack.tech and copy the key.
-const CONTACT_ENDPOINT = 'https://api.web3forms.com/submit';
-const WEB3FORMS_KEY    = '74c26bf0-485f-4614-9126-6c5770184312';
+// ===== Form submit — Resend (via /api/contact serverless function) =====
+const CONTACT_ENDPOINT = '/api/contact';
 
 const SUCCESS_HTML =
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -210,16 +208,13 @@ function handleSubmit(evt) {
   const message = get('cf-message');
   const fullName = `${first} ${last}`.trim();
 
-  const subject = `New Korestack inquiry from ${fullName}${service ? ' — ' + service : ''}`;
-
   const payload = {
-    access_key: WEB3FORMS_KEY,
-    subject,
     name:    fullName || '(not provided)',
     email:   email    || '(not provided)',
     company: company  || '(not provided)',
     service: service  || '(not specified)',
     message: message  || '(no message)',
+    subject: `New Korestack inquiry from ${fullName}${service ? ' — ' + service : ''}`,
   };
 
   const originalHTML = btn.innerHTML;
@@ -247,7 +242,7 @@ function handleSubmit(evt) {
       setTimeout(() => msg.classList.remove('show'), 5000);
     })
     .catch((err) => {
-      console.error('Web3Forms error:', err);
+      console.error('Contact form error:', err);
       msg.innerHTML = ERROR_HTML;
       msg.classList.add('show', 'error');
       setTimeout(() => msg.classList.remove('show', 'error'), 6000);
