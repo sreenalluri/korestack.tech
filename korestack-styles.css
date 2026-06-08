@@ -1247,6 +1247,7 @@ footer {
     border-radius: 8px;
   }
   .nav-toggle { display: block; }
+  .nav-logo { gap: 8px; }
   .nav-wordmark { font-size: 17px; letter-spacing: 0.14em; }
   .nav-sub { font-size: 8px; letter-spacing: 0.24em; }
   .nav-divider { height: 30px; }
@@ -1550,11 +1551,11 @@ nav {
 @media (max-width: 420px) {
   /* Tiny phones: tighten everything in the nav so links never clip */
   nav { padding: 0 10px !important; gap: 6px !important; }
-  .nav-logo { gap: 8px !important; }
+  .nav-logo { gap: 5px !important; }
   .nav-pyramid { width: 32px !important; height: 32px !important; }
   .nav-wordmark { font-size: 13px !important; letter-spacing: 0.08em !important; }
   .nav-sub { display: none !important; }
-  .nav-divider { height: 24px !important; }
+  .nav-divider { display: none !important; }
   .nav-links { gap: 8px !important; }
   .nav-links a { font-size: 10px !important; padding: 4px 1px !important; letter-spacing: 0.04em !important; }
   .nav-links a.nav-cta { padding: 6px 10px !important; font-size: 10px !important; }
