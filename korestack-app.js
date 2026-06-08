@@ -175,7 +175,7 @@ function initReveals(scope = document) {
 // ===== Form submit — Web3Forms =====
 // Get your free access key at web3forms.com — enter hello@korestack.tech and copy the key.
 const CONTACT_ENDPOINT = 'https://api.web3forms.com/submit';
-const WEB3FORMS_KEY    = 'YOUR_ACCESS_KEY';
+const WEB3FORMS_KEY    = '74c26bf0-485f-4614-9126-6c5770184312';
 
 const SUCCESS_HTML =
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
