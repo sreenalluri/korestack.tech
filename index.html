@@ -460,7 +460,7 @@
     <div class="contact-right">
       <div class="form-title reveal">Send us a message</div>
       <p class="form-sub reveal" data-delay="1">Fields marked are everything we need to get the conversation started.</p>
-      <form id="contact-form" action="https://formsubmit.co/hello@korestack.tech" method="POST">
+      <form id="contact-form" onsubmit="handleSubmit(event)">
         <!-- spam honeypot — bots fill hidden fields, real users don't -->
         <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off"/>
         <!-- skip FormSubmit's captcha page (we handle UX in JS) -->

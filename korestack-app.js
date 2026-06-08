@@ -172,8 +172,10 @@ function initReveals(scope = document) {
   bars.forEach(el => bo.observe(el));
 }
 
-// ===== Form submit — FormSubmit AJAX =====
-const CONTACT_ENDPOINT = 'https://formsubmit.co/ajax/hello@korestack.tech';
+// ===== Form submit — Web3Forms =====
+// Get your free access key at web3forms.com — enter hello@korestack.tech and copy the key.
+const CONTACT_ENDPOINT = 'https://api.web3forms.com/submit';
+const WEB3FORMS_KEY    = 'YOUR_ACCESS_KEY';
 
 const SUCCESS_HTML =
   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
@@ -208,19 +210,16 @@ function handleSubmit(evt) {
   const message = get('cf-message');
   const fullName = `${first} ${last}`.trim();
 
-  const subjectParts = ['New Korestack inquiry'];
-  if (fullName) subjectParts.push(`from ${fullName}`);
-  if (service)  subjectParts.push(`— ${service}`);
+  const subject = `New Korestack inquiry from ${fullName}${service ? ' — ' + service : ''}`;
 
   const payload = {
-    'Name':             fullName || '(not provided)',
-    'Email':            email    || '(not provided)',
-    'Company':          company  || '(not provided)',
-    'Service interest': service  || '(not specified)',
-    'Message':          message  || '(no message)',
-    _subject:           subjectParts.join(' '),
-    _template:          'table',
-    _captcha:           'false',
+    access_key: WEB3FORMS_KEY,
+    subject,
+    name:    fullName || '(not provided)',
+    email:   email    || '(not provided)',
+    company: company  || '(not provided)',
+    service: service  || '(not specified)',
+    message: message  || '(no message)',
   };
 
   const originalHTML = btn.innerHTML;
@@ -248,7 +247,7 @@ function handleSubmit(evt) {
       setTimeout(() => msg.classList.remove('show'), 5000);
     })
     .catch((err) => {
-      console.error('Contact form error:', err);
+      console.error('Web3Forms error:', err);
       msg.innerHTML = ERROR_HTML;
       msg.classList.add('show', 'error');
       setTimeout(() => msg.classList.remove('show', 'error'), 6000);
