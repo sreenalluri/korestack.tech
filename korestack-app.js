@@ -47,12 +47,16 @@ function setTweak(key, value) {
 // ===== Page transitions =====
 let isTransitioning = false;
 
-function showPage(id, evt) {
+function showPage(id, evt, skipHistory) {
   if (evt) evt.preventDefault();
   if (isTransitioning) return;
   const target = document.getElementById('page-' + id);
   const current = document.querySelector('.page.active');
   if (!target || target === current) return;
+
+  if (!skipHistory) {
+    history.pushState({ page: id }, '', '#' + id);
+  }
 
   // close mobile nav
   document.querySelector('.nav-links')?.classList.remove('open');
@@ -106,6 +110,25 @@ function showPage(id, evt) {
     isTransitioning = false;
   }, 540);
 }
+
+// ===== Browser history (back/forward button support) =====
+const VALID_PAGES = new Set(['home', 'services', 'contact', 'careers']);
+
+window.addEventListener('popstate', (e) => {
+  const id = e.state?.page || location.hash.replace('#', '') || 'home';
+  if (VALID_PAGES.has(id)) showPage(id, null, true);
+});
+
+// Navigate to the page in the URL hash on initial load
+(function () {
+  const id = location.hash.replace('#', '');
+  if (VALID_PAGES.has(id) && id !== 'home') {
+    history.replaceState({ page: id }, '', '#' + id);
+    showPage(id, null, true);
+  } else {
+    history.replaceState({ page: 'home' }, '', location.href);
+  }
+})();
 
 function runRevealsIn(scope) {
   scope.querySelectorAll('.reveal').forEach(el => el.classList.remove('in'));
