@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Korestack Contact <onboarding@resend.dev>',
+        from: 'hello@korestack.tech',
         to: ['hello@korestack.tech'],
         subject: subject || 'New Korestack inquiry',
         html: `
