@@ -488,6 +488,130 @@ function buildFindings(data, m) {
   return { issues, wins };
 }
 
+// ── Design-era signals ──
+// Lighthouse measures technical health, not looks. But its audit data holds
+// build-era fingerprints (jQuery versions, image formats, DOM bloat) that
+// date a site even when it scores well technically. This is the free layer;
+// the AI screenshot review (/api/design-check) is the judgment layer.
+function computeEraSignals(data) {
+  const audits = data?.lighthouseResult?.audits || {};
+  const signals = [];
+  let score = 100;
+
+  const libs = audits['js-libraries']?.details?.items || [];
+  const jq = libs.find((l) => /jquery/i.test(l.name || ''));
+  if (jq) {
+    const major = parseInt(String(jq.version || '').split('.')[0], 10);
+    if (major && major < 3) {
+      signals.push(`Built on jQuery ${jq.version} — a 2012–2016-era stack`);
+      score -= 25;
+    } else {
+      signals.push('Built on jQuery rather than a modern framework');
+      score -= 10;
+    }
+  }
+
+  if ((audits['modern-image-formats']?.details?.items || []).length >= 3) {
+    signals.push('No modern image formats (WebP/AVIF) — typical of pre-2020 builds');
+    score -= 20;
+  }
+
+  if ((audits['deprecations']?.details?.items || []).length > 0) {
+    signals.push('Relies on browser features deprecated years ago');
+    score -= 15;
+  }
+
+  const docWrite = audits['no-document-write'];
+  if (docWrite && docWrite.score != null && docWrite.score < 1) {
+    signals.push('Uses document.write() — a pre-2010 scripting pattern');
+    score -= 15;
+  }
+
+  const dom = audits['dom-size']?.numericValue;
+  if (dom > 3000) {
+    signals.push(`Extremely heavy page structure (${Math.round(dom)} elements)`);
+    score -= 20;
+  } else if (dom > 1500) {
+    signals.push(`Heavy page structure (${Math.round(dom)} elements)`);
+    score -= 10;
+  }
+
+  return { signals, eraScore: Math.max(0, score) };
+}
+
+function designRingHtml(score, color, caption, loading) {
+  return `
+    <div class="score-ring-block">
+      <div class="score-ring${loading ? ' is-loading' : ''}" style="--p:${loading ? 0 : score};--ring:${color};">
+        <div class="score-ring-inner">
+          <div class="score-num">${loading ? '…' : score}</div>
+          <div class="score-denom">OUT OF 100</div>
+        </div>
+      </div>
+      <div class="score-ring-caption">${caption}</div>
+    </div>`;
+}
+
+function designColor(score) {
+  if (score >= 80) return '#1D9E75';
+  if (score >= 60) return '#534AB7';
+  if (score >= 40) return '#E09F3E';
+  return '#D64545';
+}
+
+async function runDesignCheck(url, shot, era, techScore) {
+  const box = document.getElementById('design-check');
+  const ringSlot = document.getElementById('design-ring-slot');
+  if (!box || !ringSlot) return;
+
+  let ai = null;
+  if (shot) {
+    try {
+      const r = await fetch('/api/design-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, screenshot: shot }),
+      });
+      if (r.ok) ai = await r.json();
+    } catch (e) { /* fall back to era signals */ }
+  }
+
+  // Blend: the AI's aesthetic judgment leads, era fingerprints ground it.
+  const design = ai
+    ? Math.round(0.6 * ai.design_score + 0.4 * era.eraScore)
+    : era.eraScore;
+  const color = designColor(design);
+
+  ringSlot.outerHTML = designRingHtml(design, color, ai ? 'Design freshness' : 'Build era (signals)', false);
+
+  const items = [];
+  if (ai?.era_guess) {
+    items.push(`<div class="design-era-chip">Feels like <strong>${escHtml(ai.era_guess)}</strong> design</div>`);
+  }
+  const verdicts = (ai?.verdicts?.length ? ai.verdicts : era.signals);
+  verdicts.forEach((v) => {
+    items.push(`<div class="score-item"><span class="dot ${design < 60 ? 'warn' : 'good'}"></span><span>${escHtml(v)}</span></div>`);
+  });
+  (ai?.worth_keeping || []).forEach((v) => {
+    items.push(`<div class="score-item"><span class="dot good"></span><span>Worth keeping: ${escHtml(v)}</span></div>`);
+  });
+  if (!verdicts.length) {
+    items.push('<div class="score-item"><span class="dot good"></span><span>No aging signals detected — this looks like a recent build.</span></div>');
+  }
+
+  box.innerHTML = `
+    <div class="score-col-title" style="color:${color};">How modern does it look?</div>
+    ${items.join('')}`;
+
+  // A fast site that looks old is the classic silent-killer combo — call it out.
+  if (techScore >= 80 && design < 60) {
+    const gradeEl = document.querySelector('#scorer-results .score-grade');
+    const blurbEl = document.querySelector('#scorer-results .score-blurb');
+    if (gradeEl) { gradeEl.textContent = 'Fast — but visually dated'; gradeEl.style.color = '#E09F3E'; }
+    if (blurbEl) { blurbEl.textContent = 'The engine is healthy, but the design tells customers a different story. A visual rebuild keeps the speed and fixes the first impression.'; }
+  }
+}
+
 function renderScore(data, url) {
   // A 200 response can still carry a failed Lighthouse run (e.g. NO_FCP,
   // ERRORED_DOCUMENT_REQUEST). Don't score on partial data — route to the
@@ -515,14 +639,22 @@ function renderScore(data, url) {
   const shot = data?.lighthouseResult?.audits?.['final-screenshot']?.details?.data;
   const shotOk = typeof shot === 'string' && shot.startsWith('data:image/');
 
+  const era = computeEraSignals(data);
+
   const results = document.getElementById('scorer-results');
   results.innerHTML = `
     <div class="score-head">
-      <div class="score-ring" style="--p:${score};--ring:${grade.color};">
-        <div class="score-ring-inner">
-          <div class="score-num">${score}</div>
-          <div class="score-denom">OUT OF 100</div>
+      <div class="score-rings">
+        <div class="score-ring-block">
+          <div class="score-ring" style="--p:${score};--ring:${grade.color};">
+            <div class="score-ring-inner">
+              <div class="score-num">${score}</div>
+              <div class="score-denom">OUT OF 100</div>
+            </div>
+          </div>
+          <div class="score-ring-caption">Technical health</div>
         </div>
+        <span id="design-ring-slot">${designRingHtml(0, '#C9C6E0', 'Design freshness', true)}</span>
       </div>
       <div class="score-meta">
         <div class="score-grade" style="color:${grade.color}">${grade.label}</div>
@@ -530,6 +662,9 @@ function renderScore(data, url) {
         <div class="score-blurb">${grade.blurb}</div>
       </div>
       ${shotOk ? `<img class="score-shot" src="${escHtml(shot)}" alt="Your site on a phone"/>` : ''}
+    </div>
+    <div class="design-box" id="design-check">
+      <div class="design-loading">Running AI design review…</div>
     </div>
     <div class="score-cols">
       <div>
@@ -553,6 +688,9 @@ function renderScore(data, url) {
     </div>`;
   results.hidden = false;
   results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // Kick off the AI design review without blocking the technical results.
+  runDesignCheck(url, shotOk ? shot : null, era, score);
 }
 
 function scorerErrorMessage(err) {
