@@ -411,7 +411,7 @@
         <li>Priority support with 24-hour response</li>
       </ul>
     </div>
-    <div class="service-card purple reveal" data-delay="3">
+    <div class="service-card purple reveal" data-delay="3" onclick="showPage('local', event)" style="cursor: pointer;">
       <div class="service-number">03</div>
       <div class="service-title">Local SEO & Google Presence</div>
       <p class="service-desc">Being on Google isn't the same as being found on Google. We fix the technical basics and optimize your listings so local customers actually reach you.</p>
@@ -421,6 +421,7 @@
         <li>Page-speed and mobile audit + fixes</li>
         <li>Monthly ranking + traffic reports</li>
       </ul>
+      <div class="service-learn">Learn more &amp; check your Google presence <span class="arrow">→</span></div>
     </div>
     <div class="service-card teal reveal" data-delay="4">
       <div class="service-number">04</div>
@@ -1062,6 +1063,168 @@
     <h2 class="cta-title reveal" data-delay="1">See your site <em style="color: rgb(93, 202, 165)">reimagined</em> — free.</h2>
     <p class="reveal" data-delay="2" style="font-size:16px;color:rgba(255,255,255,0.65);margin:-12px auto 32px;font-weight:500;max-width:480px;">Tell us about your business and we'll show you what a modern rebuild looks like. No commitment, no jargon — live in 2–3 weeks if you love it.</p>
     <button class="btn-primary reveal" data-delay="3" style="background: #fff; color: rgb(13, 14, 14); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="goToContact('Website Design & Rebuild')">Get My Free Rebuild Plan <span class="arrow">→</span></button>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+        <g transform="translate(10, 11)">
+          <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+          <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+          <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+        </g>
+      </svg>
+      <span class="footer-copy">© 2026 KORESTACK.TECH · Houston, TX</span>
+    </div>
+    <div class="footer-links">
+      <a href="/" onclick="showPage('home', event)">Home</a>
+      <a href="/services" onclick="showPage('services', event)">Services</a>
+      <a href="/careers" onclick="showPage('careers', event)">Careers</a>
+      <a href="/contact" onclick="showPage('contact', event)">Contact</a>
+      <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════
+     LOCAL SEO & GOOGLE PRESENCE PAGE
+════════════════════════════════════ -->
+<div id="page-local" class="page" data-screen-label="06 Local SEO">
+
+  <div class="services-hero" style="background: #21305c; color: #fff; border-radius: 18px;">
+    <p class="section-eyebrow reveal" style="color: var(--teal-light)">Local SEO &amp; Google Presence</p>
+    <h1 class="section-title reveal" data-delay="1" style="color: #fff;">Be the business Google<br/><em style="font-style: italic; color: var(--teal-light)">recommends first.</em></h1>
+    <p class="section-body reveal" data-delay="2" style="color: rgba(255,255,255,0.7);">When someone nearby searches "dentist near me" or "plumber open now", Google picks a handful of winners — based on your Business Profile, your reviews, and your site. If that's not you, it's your competitor.</p>
+    <div class="hero-actions reveal" data-delay="3" style="margin-top: 32px;">
+      <button class="btn-primary" style="background: #fff; color: #16182b;" onclick="scrollToLocalChecker()">Check My Google Presence — Free <span class="arrow">→</span></button>
+      <button class="btn-secondary" style="color: #fff; border-color: rgba(255,255,255,0.4);" onclick="goToContact('Local SEO & Google Presence')">Talk to an Expert</button>
+    </div>
+  </div>
+
+  <!-- What Google cares about -->
+  <section class="why">
+    <div class="why-grid">
+      <div class="why-left" style="padding: 30px">
+        <p class="section-eyebrow reveal">What Google ranks you on</p>
+        <h2 class="section-title reveal" data-delay="1">Local ranking isn't<br/>luck. It's a checklist.</h2>
+        <p class="section-body reveal" data-delay="2" style="margin-bottom:40px;">Google's local results reward specific, checkable signals. Most small businesses are missing half of them — which is exactly why the ones who aren't keep winning.</p>
+        <div class="why-items">
+          <div class="why-item reveal" data-delay="1">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13z"/><circle cx="12" cy="9" r="3"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">A complete, active Business Profile</div>
+              <div class="why-item-body">Hours, photos, services, posts, a linked website. Profile signals are the single biggest factor in who makes Google's local pack — and completeness is entirely in your control.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="2">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Reviews — count, quality, and replies</div>
+              <div class="why-item-body">Google's own ranking guidance says review count and quality factor into local ranking — and explicitly recommends responding to reviews. A steady stream of replied-to reviews beats a big pile of ignored ones.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="3">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">A site Google can read</div>
+              <div class="why-item-body">Titles, descriptions, local business schema, crawlable pages, HTTPS. Your site confirms to Google what your profile claims — or quietly contradicts it.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="4">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Mobile speed</div>
+              <div class="why-item-body">Local searches happen on phones, in the moment. A slow site bleeds the rankings your profile earned — and the customers it attracted.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="why-visual reveal" style="padding: 48px 40px; background: #21305c;">
+        <div class="why-visual-quote">
+          When someone searches <em style="color: var(--teal-light)">"near me"</em>, Google has already picked the winners.
+        </div>
+        <div class="rebuild-stats">
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">46%</div>
+            <div class="rebuild-stat-label">of Google searches are looking for something local</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">76%</div>
+            <div class="rebuild-stat-label">of local mobile searches lead to a visit within a day</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">3 in 4</div>
+            <div class="rebuild-stat-label">regularly read Google reviews when choosing a local business</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">#1</div>
+            <div class="rebuild-stat-label">local ranking factor: your Google Business Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="process">
+    <p class="section-eyebrow reveal">Our approach</p>
+    <h2 class="section-title reveal" data-delay="1">From invisible to<br/><em style="font-style: italic; color: rgb(93, 202, 165)">recommended</em>.</h2>
+    <p class="section-body reveal" data-delay="2" style="max-width: 620px;">Local SEO isn't a trick — it's giving Google every signal it asks for, consistently, until the map pack is yours.</p>
+    <div class="process-steps reveal" data-delay="3">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Audit &amp; baseline</div>
+        <p class="step-desc">Profile completeness, review health, on-page signals, speed, and where you rank today against the competitors taking your searches.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Complete the profile</div>
+        <p class="step-desc">Categories, services, photos, hours, posts — plus consistent name, address, and phone across every directory Google checks.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Build review momentum</div>
+        <p class="step-desc">An ethical review-generation system for happy customers, and a response playbook so every review — good or bad — gets a reply Google sees.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Rank &amp; report</div>
+        <p class="step-desc">Local schema on your site, speed fixes, and monthly reports on rankings, calls, and direction requests — so you see the climb.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Free local presence checker -->
+  <section class="scorer" id="local-checker">
+    <div class="scorer-inner">
+      <p class="section-eyebrow reveal" style="display: inline-flex;">Free — no email required</p>
+      <h2 class="section-title reveal" data-delay="1">How visible is <em style="font-style: italic; color: var(--teal-mid);">your</em> business on Google?</h2>
+      <p class="section-body reveal" data-delay="2">Enter your business name and city. We'll check your Google Business Profile, reviews, on-page SEO, and mobile speed — the signals Google uses to decide who gets recommended. Usually takes under a minute.</p>
+      <form class="scorer-form reveal" data-delay="3" onsubmit="runLocalCheck(event)">
+        <input class="scorer-input" id="lc-query" type="text" maxlength="120" placeholder="Your Business Name, City TX" aria-label="Your business name and city" required/>
+        <button class="scorer-btn" id="lc-btn" type="submit">Check My Presence <span class="arrow">→</span></button>
+      </form>
+      <div class="scorer-status" id="lc-status" role="status" aria-live="polite"></div>
+      <div class="scorer-results" id="lc-results" hidden></div>
+      <p class="scorer-note reveal" data-delay="4">Uses Google's own business data and Lighthouse checks. Nothing stored, no signup.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner" style="background-color: rgb(33, 48, 92)">
+    <p class="cta-eyebrow reveal">Ready to climb?</p>
+    <h2 class="cta-title reveal" data-delay="1">Your competitors are <em style="color: rgb(93, 202, 165)">one search away.</em></h2>
+    <p class="reveal" data-delay="2" style="font-size:16px;color:rgba(255,255,255,0.65);margin:-12px auto 32px;font-weight:500;max-width:480px;">Tell us about your business and we'll send a prioritized local SEO fix list — free, no jargon, no obligation.</p>
+    <button class="btn-primary reveal" data-delay="3" style="background: #fff; color: rgb(13, 14, 14); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="goToContact('Local SEO & Google Presence')">Get My Free Local Audit <span class="arrow">→</span></button>
   </section>
 
   <footer>

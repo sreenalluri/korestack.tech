@@ -64,6 +64,11 @@ const PAGES = {
     title: 'Website Design & Rebuild + Free Website Score | Korestack',
     desc: "Is your website losing you customers? Get a free score of your site's speed, mobile experience, and design — then a modern rebuild, live in 2–3 weeks.",
   },
+  local: {
+    path: '/local-seo',
+    title: 'Local SEO & Google Presence + Free Local Score | Korestack',
+    desc: 'How visible is your business on Google? Get a free local score — Business Profile, reviews, on-page SEO, and speed — plus what to fix first to outrank competitors.',
+  },
   careers: {
     path: '/careers',
     title: 'Careers — Build AI for Small Business | Korestack',
@@ -95,7 +100,8 @@ function applyPageMeta(id) {
 
 function setNavActive(id) {
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('is-active'));
-  const navId = id === 'rebuild' ? 'services' : id;   // sub-pages highlight their parent
+  // sub-pages highlight their parent section
+  const navId = { rebuild: 'services', local: 'services' }[id] || id;
   const navLink = document.querySelector(`.nav-links a[data-page="${navId}"]`);
   if (navLink) navLink.classList.add('is-active');
 }
@@ -839,6 +845,333 @@ async function runSiteScore(evt) {
   } finally {
     clearTimeout(timeout);
     clearInterval(scorerTimer);
+    btn.disabled = false;
+    btn.innerHTML = originalBtn;
+  }
+}
+
+// ===== Local presence checker (Local SEO page) =====
+// One input (business name + city) drives the whole audit:
+//   1. /api/local-presence → Google Places: rating, reviews, hours, photos,
+//      linked website, status — the Business Profile signals Google ranks on.
+//   2. The profile's website (if any) → PageSpeed client-side for on-page
+//      SEO + mobile speed.
+// Four dimensions roll into one score: Profile 30%, Reviews 30%,
+// On-page 25%, Speed 15%.
+
+const LC_STATUS_MESSAGES = [
+  'Finding your business on Google…',
+  'Reading your Business Profile…',
+  'Checking reviews & reputation…',
+  'Auditing your website’s local SEO…',
+  'Measuring mobile speed…',
+  'Almost there — scoring your presence…',
+];
+
+let lcTimer = null;
+
+function scrollToLocalChecker() {
+  document.getElementById('local-checker')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => document.getElementById('lc-query')?.focus({ preventScroll: true }), 650);
+}
+
+function lcGrade(score) {
+  if (score >= 85) return { label: 'Strong local presence', color: '#1D9E75',
+    blurb: 'Google has what it needs to recommend you. Keep the reviews coming and this position compounds.' };
+  if (score >= 70) return { label: 'Solid, with gaps', color: '#534AB7',
+    blurb: 'You show up, but specific gaps are handing clicks to competitors. All fixable.' };
+  if (score >= 50) return { label: 'Losing ground locally', color: '#E09F3E',
+    blurb: 'Customers searching nearby are seeing competitors first. The signals Google wants are missing or weak.' };
+  return { label: 'Nearly invisible on Google', color: '#D64545',
+    blurb: 'Local searches are happening right now — and Google has almost nothing to rank you with.' };
+}
+
+function scoreGbpDim(p) {
+  const findings = [], wins = [];
+  let s = 0;
+  if (p.websiteUri) { s += 25; wins.push('Website linked on your Business Profile.'); }
+  else findings.push(['bad', 'No website linked on your Google Business Profile — customers and Google have nowhere to go.']);
+  if (p.hasHours) { s += 25; wins.push('Business hours listed — Google shows you as open.'); }
+  else findings.push(['warn', 'No business hours on your profile — Google favors complete, active profiles.']);
+  if (p.photoCount >= 3) { s += 25; wins.push(`Photos on your profile (${p.photoCount}${p.photoCount >= 10 ? '+' : ''}).`); }
+  else if (p.photoCount >= 1) { s += 12; findings.push(['warn', `Only ${p.photoCount} photo${p.photoCount > 1 ? 's' : ''} on your profile — profiles with regular photos get more clicks and calls.`]); }
+  else findings.push(['warn', 'No photos on your Business Profile — listings with photos win far more clicks.']);
+  // Only penalize explicit closed statuses; UNKNOWN/missing passes neutrally.
+  if (p.businessStatus === 'CLOSED_PERMANENTLY') { findings.push(['bad', 'Google lists your business as permanently closed — customers see a "Permanently closed" label on Maps.']); }
+  else if (p.businessStatus === 'CLOSED_TEMPORARILY') { s += 12; findings.push(['warn', 'Google lists your business as temporarily closed — customers see a "Temporarily closed" label.']); }
+  else s += 25;
+  return { score: Math.min(100, s), findings, wins };
+}
+
+function scoreReviewsDim(p) {
+  const findings = [], wins = [];
+  let s = 0;
+  const r = p.rating, n = p.reviewCount || 0;
+  if (!n) {
+    findings.push(['bad', 'No Google reviews yet — reviews are one of the strongest local ranking signals, and you have none working for you.']);
+    return { score: 5, findings, wins };
+  }
+  // Rating (Google can return a review count with no public rating)
+  if (r == null)     { s += 22; findings.push(['warn', `Google shows ${n} review${n > 1 ? 's' : ''} but no public rating — we couldn't assess rating quality automatically.`]); }
+  else if (r >= 4.6) { s += 40; wins.push(`Strong ${r}★ rating across ${n} reviews.`); }
+  else if (r >= 4.3) { s += 32; wins.push(`Good ${r}★ rating (${n} reviews).`); }
+  else if (r >= 4.0) { s += 22; findings.push(['warn', `${r}★ rating — under the ~4.3★ bar many customers filter by.`]); }
+  else               { s += 8;  findings.push(['bad', `${r}★ rating — most customers won't consider a business under 4★.`]); }
+  // Review count
+  if (n >= 100)     s += 30;
+  else if (n >= 50) s += 24;
+  else if (n >= 20) { s += 14; findings.push(['warn', `${n} reviews — competitors with 50+ look like the safer choice.`]); }
+  else              { s += 6;  findings.push(['warn', `Only ${n} review${n > 1 ? 's' : ''} — too few for Google (or customers) to trust the signal.`]); }
+  // Recency — d is the age of the most recent review Google surfaces (up to ~5
+  // "most relevant"), so we word it as such. null = Google returned no dated
+  // reviews: treat as unknown (neutral credit, no claim either way).
+  const d = p.recentReviewDays;
+  if (d == null)        { s += 18; }
+  else if (d <= 90)     { s += 30; wins.push('Fresh review activity in the last 3 months.'); }
+  else if (d <= 180)    { s += 18; findings.push(['warn', 'The reviews Google surfaces first are 3–6 months old — steady new reviews keep this signal fresh.']); }
+  else                  { s += 6;  findings.push(['warn', 'The reviews Google surfaces first are all months old — a steady trickle of new reviews beats an old pile.']); }
+  return { score: Math.min(100, s), findings, wins };
+}
+
+function scoreOnPageDim(p, psi) {
+  const findings = [], wins = [];
+  if (!p.websiteUri) {
+    return { score: 0, findings: [['bad', 'No website to audit — on-page local SEO can’t exist without a site.']], wins };
+  }
+  if (!psi) {
+    return { score: 35, findings: [['warn', 'We couldn’t complete the automated site analysis this time — we check on-page SEO by hand in the free audit.']], wins };
+  }
+  let s = psiCategory(psi, 'seo') ?? 50;
+  const audits = psi?.lighthouseResult?.audits || {};
+  const checks = [
+    ['document-title', 'bad', 'Missing page title — Google has almost nothing to rank you by.'],
+    ['meta-description', 'warn', 'Missing meta description — Google is writing your search snippet for you.'],
+    ['is-crawlable', 'bad', 'Your page blocks search engines from indexing it.'],
+    ['image-alt', 'warn', 'Images missing alt text — invisible to search.'],
+  ];
+  checks.forEach(([id, lvl, msg]) => {
+    const a = audits[id];
+    if (a && a.score != null && a.score < 0.9) findings.push([lvl, msg]);
+  });
+  if (psiAuditPass(psi, 'is-on-https') === false) { s -= 15; findings.push(['bad', 'Not served over HTTPS — a direct Google ranking factor, and browsers flag you "Not secure".']); }
+  if (psiAuditPass(psi, 'viewport') === false)    { s -= 15; findings.push(['bad', 'Not mobile-responsive — local searches are overwhelmingly on phones.']); }
+  if (!findings.length) {
+    const seo = psiCategory(psi, 'seo');
+    wins.push(seo != null ? `Search-engine fundamentals in place (SEO ${seo}/100).` : 'Search-engine fundamentals in place.');
+  }
+  return { score: Math.max(0, Math.min(100, Math.round(s))), findings, wins };
+}
+
+function scoreSpeedDim(p, psi) {
+  const findings = [], wins = [];
+  if (!p.websiteUri) return { score: 0, findings, wins };
+  if (!psi) return { score: 35, findings: [['warn', 'Mobile speed couldn’t be measured automatically this time.']], wins };
+  const perf = psiCategory(psi, 'performance');
+  if (perf == null) return { score: 35, findings: [['warn', 'Mobile speed couldn’t be measured automatically this time.']], wins };
+  const lcp = psi?.lighthouseResult?.audits?.['largest-contentful-paint']?.displayValue;
+  if (perf < 50)      findings.push(['bad', `Slow on mobile (${perf}/100${lcp ? `, content appears in ${escHtml(lcp)}` : ''}) — speed is a ranking signal and a customer-patience test.`]);
+  else if (perf < 80) findings.push(['warn', `Middling mobile speed (${perf}/100) — faster competitors get the edge in both rankings and trust.`]);
+  else                wins.push(`Fast on mobile — performance ${perf}/100.`);
+  return { score: perf, findings, wins };
+}
+
+async function fetchPsiForLocal(url) {
+  const params = new URLSearchParams({ url, strategy: 'mobile' });
+  ['SEO', 'PERFORMANCE'].forEach((c) => params.append('category', c));
+  if (PSI_KEY) params.set('key', PSI_KEY);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 95000);
+  try {
+    const resp = await fetch(`${PSI_ENDPOINT}?${params}`, { signal: controller.signal });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const rte = data?.lighthouseResult?.runtimeError;
+    if (rte?.code && rte.code !== 'NO_ERROR') return null;
+    return data;
+  } catch (e) {
+    return null;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function lcErrorMessage(err) {
+  if (err.name === 'AbortError') return 'That took longer than expected. Try again, or grab a free hand audit below.';
+  // 429 from the server is a daily-cap hit (per-IP or global), not transient —
+  // don't tell the user to "try in a minute" when the answer is tomorrow.
+  if (err.httpStatus === 429) return 'You’ve used today’s free checks — try again tomorrow, or grab a free hand audit below.';
+  if (err.httpStatus === 503) return 'The local checker isn’t available right now — but we’ll audit your Google presence by hand for free below.';
+  return 'Couldn’t complete the check right now. Please try again in a moment.';
+}
+
+function renderLocalErrorCta() {
+  const results = document.getElementById('lc-results');
+  if (!results) return;
+  results.innerHTML = `
+    <div class="score-cta" style="border-top:none;margin-top:0;padding-top:0;">
+      <div class="score-cta-text">Prefer a human? We’ll audit your Google presence by hand — profile, reviews, rankings — and send you what we find. Free, no obligation.</div>
+      <button class="btn-primary" style="background:#21305c;" onclick="goToContact('Local SEO & Google Presence')">Get a Free Local Audit <span class="arrow">→</span></button>
+    </div>`;
+  results.hidden = false;
+}
+
+function dimCardHtml(name, dim) {
+  const color = designColor(dim.score);
+  return `
+    <div class="dim-card">
+      <div class="dim-name">${name}</div>
+      <div class="dim-score" style="color:${color};">${dim.score}</div>
+      <div class="dim-bar"><div class="dim-fill" style="width:${dim.score}%;background:${color};"></div></div>
+    </div>`;
+}
+
+function renderLocalResult(place, psi, query) {
+  const results = document.getElementById('lc-results');
+  if (!results) return;
+
+  if (!place.found) {
+    results.innerHTML = `
+      <div class="score-head">
+        <div class="score-rings">
+          <div class="score-ring-block">
+            <div class="score-ring" style="--p:0;--ring:#C9C6E0;">
+              <div class="score-ring-inner"><div class="score-num" style="font-size:26px;">—</div><div class="score-denom">NO MATCH</div></div>
+            </div>
+            <div class="score-ring-caption">Local presence</div>
+          </div>
+        </div>
+        <div class="score-meta">
+          <div class="score-grade" style="color:#E09F3E">No match found</div>
+          <div class="score-url">${escHtml(query)}</div>
+          <div class="score-blurb">We couldn’t find a match for that search on Google Maps. Double-check the spelling and include your city — e.g. "Bobcat Dental, Prosper TX" — and try again. If your business genuinely isn’t listed, claiming a free Google Business Profile is step one, and it changes everything downstream.</div>
+        </div>
+      </div>
+      <div class="score-cta">
+        <div class="score-cta-text">Not listed yet? We’ll set up and optimize your Google Business Profile as part of a local SEO engagement — and audit whatever else is holding you back.</div>
+        <button class="btn-primary" style="background:#21305c;" onclick="goToContact('Local SEO & Google Presence')">Get Found on Google <span class="arrow">→</span></button>
+      </div>`;
+    results.hidden = false;
+    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+
+  const gbp = scoreGbpDim(place);
+  const rev = scoreReviewsDim(place);
+  const onpage = scoreOnPageDim(place, psi);
+  const speed = scoreSpeedDim(place, psi);
+  const overall = Math.round(gbp.score * 0.3 + rev.score * 0.3 + onpage.score * 0.25 + speed.score * 0.15);
+  const grade = lcGrade(overall);
+
+  const issues = [...gbp.findings, ...rev.findings, ...onpage.findings, ...speed.findings];
+  const wins = [...gbp.wins, ...rev.wins, ...onpage.wins, ...speed.wins];
+
+  results.innerHTML = `
+    <div class="score-head">
+      <div class="score-rings">${designRingHtml(overall, grade.color, 'Local presence', false)}</div>
+      <div class="score-meta">
+        <div class="score-grade" style="color:${grade.color}">${grade.label}</div>
+        <div class="score-url">${escHtml(place.name || query)}${place.address ? ' · ' + escHtml(place.address) : ''}</div>
+        <div class="score-blurb">${grade.blurb}</div>
+      </div>
+    </div>
+    <div class="dim-grid">
+      ${dimCardHtml('Business Profile', gbp)}
+      ${dimCardHtml('Reviews & Reputation', rev)}
+      ${dimCardHtml('On-Page SEO', onpage)}
+      ${dimCardHtml('Speed & Mobile', speed)}
+    </div>
+    <div class="score-cols">
+      <div>
+        <div class="score-col-title bad">Needs attention</div>
+        ${issues.length
+          ? issues.map(([lvl, t]) => `<div class="score-item"><span class="dot ${lvl}"></span><span>${t}</span></div>`).join('')
+          : '<div class="score-item"><span class="dot good"></span><span>Nothing major — your local presence is in good shape.</span></div>'}
+      </div>
+      <div>
+        <div class="score-col-title good">Working for you</div>
+        ${wins.length
+          ? wins.map((t) => `<div class="score-item"><span class="dot good"></span><span>${t}</span></div>`).join('')
+          : '<div class="score-item"><span class="dot warn"></span><span>Not much yet — which means fast wins are on the table.</span></div>'}
+      </div>
+    </div>
+    <div class="lc-tip">Google’s own ranking guidance explicitly recommends <strong>responding to your reviews</strong> — and most owners never do. Review-response coverage can’t be checked automatically, so we audit it by hand in every free local audit.</div>
+    <div class="score-cta">
+      <div class="score-cta-text">${overall >= 85
+        ? 'Strong position — the game now is keeping it. Monthly local SEO keeps the reviews, rankings, and profile working.'
+        : 'We’ll send you a prioritized fix list for everything above — free, no obligation.'}</div>
+      <button class="btn-primary" style="background:#21305c;" onclick="goToContact('Local SEO & Google Presence')">${overall >= 85 ? 'Keep My Edge' : 'Get My Free Local Audit'} <span class="arrow">→</span></button>
+    </div>`;
+  results.hidden = false;
+  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function runLocalCheck(evt) {
+  if (evt) evt.preventDefault();
+
+  const btn = document.getElementById('lc-btn');
+  const status = document.getElementById('lc-status');
+  const results = document.getElementById('lc-results');
+  if (!btn || !status || !results) return;
+
+  const query = (document.getElementById('lc-query')?.value || '').trim();
+  if (query.length < 3) {
+    status.textContent = 'Enter your business name and city — e.g. "Bobcat Dental, Prosper TX"';
+    status.className = 'scorer-status error';
+    return;
+  }
+  if (query.length > 120) {
+    status.textContent = 'That looks long — just your business name and city is enough, e.g. "Bobcat Dental, Prosper TX"';
+    status.className = 'scorer-status error';
+    return;
+  }
+
+  const originalBtn = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Checking…';
+  results.hidden = true;
+  status.className = 'scorer-status';
+
+  let msgIdx = 0;
+  status.textContent = LC_STATUS_MESSAGES[0];
+  clearInterval(lcTimer);
+  lcTimer = setInterval(() => {
+    msgIdx = Math.min(msgIdx + 1, LC_STATUS_MESSAGES.length - 1);
+    status.textContent = LC_STATUS_MESSAGES[msgIdx];
+  }, 6000);
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const resp = await fetch('/api/local-presence', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query }),
+      signal: controller.signal,
+    });
+    if (!resp.ok) {
+      const body = await resp.json().catch(() => ({}));
+      const e = new Error(body.error || `HTTP ${resp.status}`);
+      e.httpStatus = resp.status;
+      throw e;
+    }
+    const place = await resp.json();
+
+    let psi = null;
+    if (place.found && place.websiteUri) {
+      psi = await fetchPsiForLocal(place.websiteUri);
+    }
+
+    renderLocalResult(place, psi, query);
+    status.textContent = '';
+    status.className = 'scorer-status';
+  } catch (err) {
+    console.error('Local check failed:', err);
+    status.textContent = lcErrorMessage(err);
+    status.className = 'scorer-status error';
+    renderLocalErrorCta();
+  } finally {
+    clearTimeout(timeout);
+    clearInterval(lcTimer);
     btn.disabled = false;
     btn.innerHTML = originalBtn;
   }
