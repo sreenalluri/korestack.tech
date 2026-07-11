@@ -69,6 +69,11 @@ const PAGES = {
     title: 'Local SEO & Google Presence + Free Local Score | Korestack',
     desc: 'How visible is your business on Google? Get a free local score — Business Profile, reviews, on-page SEO, and speed — plus what to fix first to outrank competitors.',
   },
+  hosting: {
+    path: '/managed-hosting',
+    title: 'Managed Website Hosting & Care Plans | Korestack',
+    desc: 'Stop babysitting your website. We host, secure, monitor, and update it — you never touch it. See who hosts you now and what a zero-downtime migration looks like.',
+  },
   careers: {
     path: '/careers',
     title: 'Careers — Build AI for Small Business | Korestack',
@@ -101,7 +106,7 @@ function applyPageMeta(id) {
 function setNavActive(id) {
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('is-active'));
   // sub-pages highlight their parent section
-  const navId = { rebuild: 'services', local: 'services' }[id] || id;
+  const navId = { rebuild: 'services', local: 'services', hosting: 'services' }[id] || id;
   const navLink = document.querySelector(`.nav-links a[data-page="${navId}"]`);
   if (navLink) navLink.classList.add('is-active');
 }
@@ -1172,6 +1177,204 @@ async function runLocalCheck(evt) {
   } finally {
     clearTimeout(timeout);
     clearInterval(lcTimer);
+    btn.disabled = false;
+    btn.innerHTML = originalBtn;
+  }
+}
+
+// ===== "Who hosts you now?" detector (Managed Hosting page) =====
+// Domain in → /api/host-detect fingerprints the current host/platform, email
+// provider, and DNS host from public signals → a plain-English verdict plus
+// migration-relevant risk flags. No API key, no cost per call.
+
+let hdTimer = null;
+const HD_STATUS_MESSAGES = [
+  'Looking up your domain…',
+  'Reading your DNS records…',
+  'Checking who hosts your site…',
+  'Finding your email provider…',
+  'Sizing up the migration…',
+];
+
+function scrollToHostDetect() {
+  document.getElementById('host-detect')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => document.getElementById('hd-domain')?.focus({ preventScroll: true }), 650);
+}
+
+// Per-platform migration difficulty + the sharpest gotcha, from the playbook.
+const PLATFORM_NOTES = {
+  'Wix': { ease: 'Involved', note: 'Wix is a closed platform — there’s no full-site export, so we rebuild every page. We also handle the "free domain" lock-in so you don’t lose it.' },
+  'Squarespace': { ease: 'Straightforward', note: 'We re-point DNS and leave your domain in place, so your site and email keep working through the switch.' },
+  'GoDaddy Website Builder': { ease: 'Easy', note: 'GoDaddy is usually your registrar and host, so we just update DNS — no transfer, no waiting, and your Microsoft 365 email is untouched.' },
+  'Weebly': { ease: 'Involved', note: 'Weebly has no clean export, so we rebuild the site and re-point DNS with zero downtime.' },
+  'Webflow': { ease: 'Straightforward', note: 'We rebuild in our template and re-point DNS — your email and domain stay exactly where they are.' },
+  'WordPress (self-hosted)': { ease: 'Straightforward', note: 'WordPress is the one platform with a real content export — your copy and images come across cleanly, then we rebuild the design modern and fast.' },
+  'WordPress.com': { ease: 'Straightforward', note: 'We export your content from WordPress.com and rebuild it modern, then re-point DNS with no downtime.' },
+  'Shopify': { ease: 'Custom', note: 'Shopify stores need a tailored plan — let’s talk through what moving (or keeping) your store looks like.' },
+  'Vercel': { ease: 'Already modern', note: 'You’re on solid, modern infrastructure — the question is whether it’s being maintained. That’s exactly what our care plans cover.' },
+  'Netlify': { ease: 'Already modern', note: 'You’re on modern hosting already — we can take over hosting and maintenance so it stays fast and secure without you touching it.' },
+  'Cloudflare Pages': { ease: 'Already modern', note: 'You’re on Cloudflare Pages — fast, modern hosting. We can take over maintenance and edits so it stays that way without you lifting a finger.' },
+  'GitHub Pages': { ease: 'Straightforward', note: 'GitHub Pages is fine for static sites but has no forms, email, or support — we move you to managed hosting that does it all.' },
+  'Behind Cloudflare': { ease: 'Depends on origin', note: 'You’re behind Cloudflare, so your real host is hidden — we’ll take a look, then plan a clean move with your email and rankings kept intact.' },
+};
+
+function hostDetectRisks(d) {
+  const risks = [], goods = [];
+  if (d.platformKind === 'builder') {
+    risks.push(['bad', `You’re on ${d.platform} — a do-it-yourself builder. You’re paying monthly and still doing all the work yourself. We do it for you.`]);
+  } else if (d.platformKind === 'proxied') {
+    goods.push('You’re behind Cloudflare — modern and fast. We can’t see your origin host from here, but the real question is who keeps it maintained.');
+  } else if (d.platformKind === 'modern') {
+    goods.push(`You’re on modern infrastructure (${escHtml(d.platform)}) — nice. The question is who keeps it maintained.`);
+  } else if (!d.platform) {
+    risks.push(['warn', 'We couldn’t identify your platform from your DNS — often an older or custom setup that’s worth a closer look to see how it’s holding up.']);
+  }
+
+  if (d.cdn) goods.push(`Delivered over a CDN (${escHtml(d.cdn)}) for faster loads.`);
+
+  // Email tied to the same builder = the migration risk people don't see coming
+  const emailOnBuilder = d.emailHost && /GoDaddy|Wix/.test(d.emailHost);
+  if (emailOnBuilder) {
+    risks.push(['warn', `Your email (${escHtml(d.emailHost)}) is tied to your website host — moving your site carelessly can knock out your inbox. We migrate DNS so email never skips a beat.`]);
+  } else if (d.emailHost) {
+    goods.push(`Business email on ${escHtml(d.emailHost)} — we keep it running untouched through any move.`);
+  } else if (d.emailChecked) {
+    // only claim "no email" when the MX lookup actually succeeded and was empty
+    risks.push(['warn', 'No business email found on your domain — you may be using a personal Gmail/Yahoo address, which costs you credibility with customers.']);
+  }
+  return { risks, goods };
+}
+
+function renderHostResult(d, query) {
+  const results = document.getElementById('hd-results');
+  if (!results) return;
+
+  if (!d.found) {
+    results.innerHTML = `
+      <div class="hd-head">
+        <div class="hd-verdict">We couldn’t find a live site at <strong>${escHtml(query)}</strong></div>
+        <div class="hd-sub">Double-check the spelling. If you don’t have a website yet, that’s our favorite place to start — a modern one, hosted and maintained, live in 2–3 weeks.</div>
+      </div>
+      <div class="score-cta">
+        <div class="score-cta-text">No site yet, or between hosts? Let’s build and host you a modern one from scratch.</div>
+        <button class="btn-primary" style="background:#21305c;" onclick="goToContact('Managed Hosting & Edits')">Get Started <span class="arrow">→</span></button>
+      </div>`;
+    results.hidden = false;
+    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
+
+  const { risks, goods } = hostDetectRisks(d);
+  const pn = (d.platform && PLATFORM_NOTES[d.platform]) || null;
+  const platformLabel = d.platform || 'an unrecognized setup';
+
+  results.innerHTML = `
+    <div class="hd-head">
+      <div class="hd-badges">
+        <div class="hd-badge"><span class="hd-badge-label">Website host</span><span class="hd-badge-value">${escHtml(d.platform || 'Unknown')}</span></div>
+        <div class="hd-badge"><span class="hd-badge-label">Email</span><span class="hd-badge-value">${escHtml(d.emailHost || 'None found')}</span></div>
+        <div class="hd-badge"><span class="hd-badge-label">DNS host</span><span class="hd-badge-value">${escHtml(d.dnsHost || 'Unknown')}</span></div>
+        ${pn ? `<div class="hd-badge"><span class="hd-badge-label">Migration</span><span class="hd-badge-value">${escHtml(pn.ease)}</span></div>` : ''}
+      </div>
+      <div class="hd-verdict">You’re hosted on <strong>${escHtml(platformLabel)}</strong>.</div>
+    </div>
+    <div class="score-cols">
+      <div>
+        <div class="score-col-title bad">What’s holding you back</div>
+        ${risks.length
+          ? risks.map(([lvl, t]) => `<div class="score-item"><span class="dot ${lvl}"></span><span>${t}</span></div>`).join('')
+          : '<div class="score-item"><span class="dot good"></span><span>Nothing glaring — your setup looks healthy. The value we add is keeping it that way.</span></div>'}
+      </div>
+      <div>
+        <div class="score-col-title good">Working for you</div>
+        ${goods.length
+          ? goods.map((t) => `<div class="score-item"><span class="dot good"></span><span>${escHtml(t)}</span></div>`).join('')
+          : '<div class="score-item"><span class="dot warn"></span><span>Not much yet — which means a move to managed hosting is mostly upside.</span></div>'}
+      </div>
+    </div>
+    ${pn ? `<div class="lc-tip"><strong>Moving from ${escHtml(d.platform)}:</strong> ${escHtml(pn.note)}</div>` : ''}
+    <div class="score-cta">
+      <div class="score-cta-text">We handle migrations end to end — built for zero downtime, with your email and Google rankings kept intact.</div>
+      <button class="btn-primary" style="background:#21305c;" onclick="goToContact('Managed Hosting & Edits')">Get My Free Migration Plan <span class="arrow">→</span></button>
+    </div>`;
+  results.hidden = false;
+  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hdErrorMessage(err) {
+  if (err.name === 'AbortError') return 'That took longer than expected — try again in a moment.';
+  if (err.httpStatus === 429) return 'You’ve used today’s free checks — try again tomorrow, or grab a free migration plan below.';
+  if (err.httpStatus === 400) return err.serverMsg || 'Enter a valid domain, e.g. yourbusiness.com';
+  return 'Couldn’t complete the check right now. Please try again in a moment.';
+}
+
+function renderHostErrorCta() {
+  const results = document.getElementById('hd-results');
+  if (!results) return;
+  results.innerHTML = `
+    <div class="score-cta" style="border-top:none;margin-top:0;padding-top:0;">
+      <div class="score-cta-text">However you’re hosted today, we’ll map a zero-downtime migration for you by hand — free, no obligation.</div>
+      <button class="btn-primary" style="background:#21305c;" onclick="goToContact('Managed Hosting & Edits')">Get a Free Migration Plan <span class="arrow">→</span></button>
+    </div>`;
+  results.hidden = false;
+}
+
+async function runHostDetect(evt) {
+  if (evt) evt.preventDefault();
+  const btn = document.getElementById('hd-btn');
+  const status = document.getElementById('hd-status');
+  const results = document.getElementById('hd-results');
+  if (!btn || !status || !results) return;
+
+  const query = (document.getElementById('hd-domain')?.value || '').trim();
+  if (query.length < 3 || !query.includes('.')) {
+    status.textContent = 'Enter your website address — e.g. yourbusiness.com';
+    status.className = 'scorer-status error';
+    return;
+  }
+
+  const originalBtn = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Checking…';
+  results.hidden = true;
+  status.className = 'scorer-status';
+
+  let msgIdx = 0;
+  status.textContent = HD_STATUS_MESSAGES[0];
+  clearInterval(hdTimer);
+  hdTimer = setInterval(() => {
+    msgIdx = Math.min(msgIdx + 1, HD_STATUS_MESSAGES.length - 1);
+    status.textContent = HD_STATUS_MESSAGES[msgIdx];
+  }, 4000);
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20000);
+  try {
+    const resp = await fetch('/api/host-detect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ domain: query }),
+      signal: controller.signal,
+    });
+    if (!resp.ok) {
+      const body = await resp.json().catch(() => ({}));
+      const e = new Error(body.error || `HTTP ${resp.status}`);
+      e.httpStatus = resp.status;
+      e.serverMsg = body.error;
+      throw e;
+    }
+    const data = await resp.json();
+    renderHostResult(data, query);
+    status.textContent = '';
+    status.className = 'scorer-status';
+  } catch (err) {
+    console.error('Host detect failed:', err);
+    status.textContent = hdErrorMessage(err);
+    status.className = 'scorer-status error';
+    renderHostErrorCta();
+  } finally {
+    clearTimeout(timeout);
+    clearInterval(hdTimer);
     btn.disabled = false;
     btn.innerHTML = originalBtn;
   }

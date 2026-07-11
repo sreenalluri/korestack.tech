@@ -400,16 +400,17 @@
       </ul>
       <div class="service-learn">Learn more &amp; score your site free <span class="arrow">→</span></div>
     </div>
-    <div class="service-card teal reveal" data-delay="2">
+    <div class="service-card teal reveal" data-delay="2" onclick="showPage('hosting', event)" style="cursor: pointer;">
       <div class="service-number">02</div>
       <div class="service-title">Managed Hosting & Edits</div>
       <p class="service-desc">We keep your site fast, secure, and up to date — so you never have to think about hosting, downtime, or "I need to change my hours" again.</p>
       <ul class="service-list">
         <li>Reliable hosting with automatic SSL</li>
-        <li>Ongoing content updates (hours, prices, photos)</li>
-        <li>Uptime monitoring + weekly health checks</li>
-        <li>Priority support with 24-hour response</li>
+        <li>Ongoing content edits (hours, prices, photos)</li>
+        <li>24/7 uptime monitoring + security patches</li>
+        <li>Priority support &amp; fast turnaround</li>
       </ul>
+      <div class="service-learn">Learn more &amp; see who hosts you now <span class="arrow">→</span></div>
     </div>
     <div class="service-card purple reveal" data-delay="3" onclick="showPage('local', event)" style="cursor: pointer;">
       <div class="service-number">03</div>
@@ -1225,6 +1226,220 @@
     <h2 class="cta-title reveal" data-delay="1">Your competitors are <em style="color: rgb(93, 202, 165)">one search away.</em></h2>
     <p class="reveal" data-delay="2" style="font-size:16px;color:rgba(255,255,255,0.65);margin:-12px auto 32px;font-weight:500;max-width:480px;">Tell us about your business and we'll send a prioritized local SEO fix list — free, no jargon, no obligation.</p>
     <button class="btn-primary reveal" data-delay="3" style="background: #fff; color: rgb(13, 14, 14); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="goToContact('Local SEO & Google Presence')">Get My Free Local Audit <span class="arrow">→</span></button>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+        <g transform="translate(10, 11)">
+          <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+          <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+          <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+        </g>
+      </svg>
+      <span class="footer-copy">© 2026 KORESTACK.TECH · Houston, TX</span>
+    </div>
+    <div class="footer-links">
+      <a href="/" onclick="showPage('home', event)">Home</a>
+      <a href="/services" onclick="showPage('services', event)">Services</a>
+      <a href="/careers" onclick="showPage('careers', event)">Careers</a>
+      <a href="/contact" onclick="showPage('contact', event)">Contact</a>
+      <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════
+     MANAGED HOSTING & EDITS PAGE
+════════════════════════════════════ -->
+<div id="page-hosting" class="page" data-screen-label="07 Managed Hosting">
+
+  <div class="services-hero" style="background: #21305c; color: #fff; border-radius: 18px;">
+    <p class="section-eyebrow reveal" style="color: var(--teal-light)">Managed Hosting &amp; Edits</p>
+    <h1 class="section-title reveal" data-delay="1" style="color: #fff;">Your website should<br/>just <em style="font-style: italic; color: var(--teal-light)">work.</em></h1>
+    <p class="section-body reveal" data-delay="2" style="color: rgba(255,255,255,0.7);">No logins. No "how do I change my hours." No 2am downtime. We host it, secure it, monitor it, and make every edit for you — so your site runs itself and you run your business.</p>
+    <div class="hero-actions reveal" data-delay="3" style="margin-top: 32px;">
+      <button class="btn-primary" style="background: #fff; color: #16182b;" onclick="scrollToHostDetect()">See Who Hosts You Now — Free <span class="arrow">→</span></button>
+      <button class="btn-secondary" style="color: #fff; border-color: rgba(255,255,255,0.4);" onclick="goToContact('Managed Hosting & Edits')">Talk to an Expert</button>
+    </div>
+  </div>
+
+  <!-- Why managed hosting -->
+  <section class="why">
+    <div class="why-grid">
+      <div class="why-left" style="padding: 30px">
+        <p class="section-eyebrow reveal">Why it matters</p>
+        <h2 class="section-title reveal" data-delay="1">A website is a<br/>living thing. Most<br/>get abandoned.</h2>
+        <p class="section-body reveal" data-delay="2" style="margin-bottom:40px;">A site that isn't maintained slowly rots — slower, less secure, out of date. Managed hosting means it never does, and you never have to think about it.</p>
+        <div class="why-items">
+          <div class="why-item reveal" data-delay="1">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Security &amp; updates, handled</div>
+              <div class="why-item-body">Patches, SSL renewal, and backups run in the background. Neglected sites — especially old WordPress — are the #1 target for hacks. Yours stays locked down.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="2">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Fast, everywhere</div>
+              <div class="why-item-body">Global CDN, modern infrastructure, and speed monitoring keep your site loading in under two seconds — the difference between a booking and a bounce.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="3">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Uptime you can count on</div>
+              <div class="why-item-body">We monitor around the clock and fix problems before you — or your customers — ever notice. No "site's down" surprises.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="4">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">You just ask; we edit</div>
+              <div class="why-item-body">New hours? A price change? A seasonal photo? Email us and it's handled — quickly, with priority turnaround on our Care+ plan. You never log into a dashboard again.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="why-visual reveal" style="padding: 48px 40px; background: #21305c;">
+        <div class="why-visual-quote">
+          The best website is the one you <em style="color: var(--teal-light)">never have to think about.</em>
+        </div>
+        <div class="rebuild-stats">
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">&lt;2s</div>
+            <div class="rebuild-stat-label">load time we hold your site to, worldwide</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">24/7</div>
+            <div class="rebuild-stat-label">uptime monitoring — we catch it before you do</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">0</div>
+            <div class="rebuild-stat-label">dashboards you ever have to log into</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">1</div>
+            <div class="rebuild-stat-label">email is all it takes to get an edit done</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing tiers -->
+  <section class="plans">
+    <div style="text-align:center;">
+      <p class="section-eyebrow reveal" style="display:inline-flex;">Simple, honest pricing</p>
+      <h2 class="section-title reveal" data-delay="1">One monthly plan.<br/>Everything <em style="font-style: italic; color: var(--teal-mid);">handled.</em></h2>
+      <p class="section-body reveal" data-delay="2" style="max-width:560px;margin:14px auto 0;">Hosting, security, monitoring, and edits in one predictable price — no surprise bills, no per-hour invoices.</p>
+    </div>
+    <div class="plan-grid reveal" data-delay="3">
+      <div class="plan-card">
+        <div class="plan-name">Care</div>
+        <div class="plan-price">$99<span>/mo</span></div>
+        <div class="plan-setup">+ $750 one-time setup</div>
+        <ul class="plan-list">
+          <li>Managed hosting + SSL</li>
+          <li>24/7 uptime monitoring</li>
+          <li>Security patches &amp; backups</li>
+          <li><strong>2 content edits</strong> / month</li>
+          <li>Monthly uptime report</li>
+        </ul>
+        <button class="plan-btn" onclick="goToContact('Managed Hosting & Edits')">Choose Care</button>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-tag">Most popular</div>
+        <div class="plan-name">Care+</div>
+        <div class="plan-price">$149<span>/mo</span></div>
+        <div class="plan-setup">+ $1,000 one-time setup</div>
+        <ul class="plan-list">
+          <li>Everything in Care</li>
+          <li><strong>Up to 6 edits</strong> / month</li>
+          <li>Priority 1-business-day turnaround</li>
+          <li>Quarterly SEO &amp; health check</li>
+          <li>Form &amp; booking maintenance</li>
+        </ul>
+        <button class="plan-btn featured" onclick="goToContact('Managed Hosting & Edits')">Choose Care+</button>
+      </div>
+      <div class="plan-card">
+        <div class="plan-name">Growth</div>
+        <div class="plan-price">$249<span>/mo</span></div>
+        <div class="plan-setup">+ $1,000 one-time setup</div>
+        <ul class="plan-list">
+          <li>Everything in Care+</li>
+          <li><strong>Unlimited</strong> reasonable edits</li>
+          <li>New landing pages &amp; campaigns</li>
+          <li>Monthly analytics review</li>
+          <li>Content &amp; copy help</li>
+        </ul>
+        <button class="plan-btn" onclick="goToContact('Managed Hosting & Edits')">Choose Growth</button>
+      </div>
+    </div>
+    <p class="plans-note reveal">Prefer to keep your own domain and email? Perfect — you own them, we manage them. Business email available as a simple add-on.</p>
+  </section>
+
+  <!-- Who hosts you now detector -->
+  <section class="scorer" id="host-detect">
+    <div class="scorer-inner">
+      <p class="section-eyebrow reveal" style="display: inline-flex;">Free — no signup</p>
+      <h2 class="section-title reveal" data-delay="1">Who hosts <em style="font-style: italic; color: var(--teal-mid);">you</em> right now?</h2>
+      <p class="section-body reveal" data-delay="2">Enter your website and we'll show you who's hosting it, where your email lives, and exactly what moving to managed hosting would look like — zero downtime, nothing lost.</p>
+      <form class="scorer-form reveal" data-delay="3" onsubmit="runHostDetect(event)">
+        <input class="scorer-input" id="hd-domain" type="text" inputmode="url" autocomplete="url" maxlength="253" placeholder="yourbusiness.com" aria-label="Your website address" required/>
+        <button class="scorer-btn" id="hd-btn" type="submit">See My Host <span class="arrow">→</span></button>
+      </form>
+      <div class="scorer-status" id="hd-status" role="status" aria-live="polite"></div>
+      <div class="scorer-results" id="hd-results" hidden></div>
+      <p class="scorer-note reveal" data-delay="4">Reads only public DNS and your site's own headers. Nothing stored, nothing changed.</p>
+    </div>
+  </section>
+
+  <!-- Zero-downtime migration -->
+  <section class="process">
+    <p class="section-eyebrow reveal">Switching is painless</p>
+    <h2 class="section-title reveal" data-delay="1">Built for zero downtime.<br/>Email &amp; rankings <em style="font-style: italic; color: rgb(93, 202, 165)">kept intact.</em></h2>
+    <p class="section-body reveal" data-delay="2" style="max-width: 620px;">Moving hosts sounds scary — it isn't when it's done right. Our process is built to keep you live the whole way, with your email untouched and your rankings carried over.</p>
+    <div class="process-steps reveal" data-delay="3">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">We build in parallel</div>
+        <p class="step-desc">Your new site goes up on a private staging link while your current one stays live and untouched. You review it before anything changes.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">We map every URL</div>
+        <p class="step-desc">Every existing page gets a redirect to its new home, so Google — and your customers — never hit a dead end. Your rankings come with you.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">We flip the switch</div>
+        <p class="step-desc">A quick DNS change points your domain to the new site. We never touch your email records, so your inbox keeps working the whole time.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">We keep a safety net</div>
+        <p class="step-desc">Your old site stays live for a couple of weeks as backup, and we watch for anything that slips. Only then do we retire it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner" style="background-color: rgb(33, 48, 92)">
+    <p class="cta-eyebrow reveal">Off your plate for good</p>
+    <h2 class="cta-title reveal" data-delay="1">Let us take the website <em style="color: rgb(93, 202, 165)">off your hands.</em></h2>
+    <p class="reveal" data-delay="2" style="font-size:16px;color:rgba(255,255,255,0.65);margin:-12px auto 32px;font-weight:500;max-width:480px;">Tell us where you're hosted today and we'll map a free, zero-downtime migration plan — no jargon, no obligation.</p>
+    <button class="btn-primary reveal" data-delay="3" style="background: #fff; color: rgb(13, 14, 14); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="goToContact('Managed Hosting & Edits')">Get My Free Migration Plan <span class="arrow">→</span></button>
   </section>
 
   <footer>

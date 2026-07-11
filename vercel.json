@@ -5,6 +5,7 @@
     { "source": "/services", "destination": "/index.html" },
     { "source": "/rebuild", "destination": "/index.html" },
     { "source": "/local-seo", "destination": "/index.html" },
+    { "source": "/managed-hosting", "destination": "/index.html" },
     { "source": "/careers", "destination": "/index.html" },
     { "source": "/contact", "destination": "/index.html" }
   ]
