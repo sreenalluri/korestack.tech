@@ -21,16 +21,25 @@ const ALLOWED_REFERERS = [
   'localhost:3000',
 ];
 
-const PROMPT = `You are a senior web designer reviewing a small business website for a redesign agency. The image is a mobile screenshot of {url}.
+const PROMPT = `You are a demanding design director at a top agency, reviewing a small business website's mobile screenshot ({url}) to decide if it needs a redesign. You reject most work as not good enough. Be harsh and specific — your job is to find what's wrong, not to reassure.
 
-Judge ONLY visual design modernity — not speed or code. Consider: typography (scale, hierarchy, font era), whitespace and layout density, color palette fashion, imagery style (stock-photo era, gradients, clip art), component styling (buttons, nav, shadows, corners), and overall composition.
+Judge ONLY visual design, not speed or code. Weigh: typography (modern typefaces, clear hierarchy, generous sizing vs. tiny/system fonts), whitespace (does it breathe, or is it cramped and text-heavy), color (current and intentional, or muddy/dated/default), imagery (fresh and authentic, or dated stock photos, clip art, gradients, low-res), components (buttons, nav, cards — clean and current, or beveled/glossy/2010s), and overall composition (does it look like a business that's thriving in 2026, or coasting on a site built years ago).
+
+SCORING — be strict. Most small-business sites are mediocre and should land in the 30s–50s. Do NOT give benefit of the doubt; when unsure, score LOWER.
+- 85-100: genuinely current, could pass for a well-funded 2026 brand. RARE — reserve it.
+- 70-84: solid and modern but unremarkable; minor dated touches.
+- 50-69: functional but visibly aging; a customer would notice it looks a few years old.
+- 30-49: clearly dated (feels ~2012-2016); cramped, generic-template, or dated imagery.
+- 0-29: looks abandoned, broken, or straight out of the 2000s.
+
+A clean, fast, but BORING or GENERIC site is NOT modern — bland templates, default fonts, and stock photography should score in the 40s regardless of how "tidy" it looks. Reserve 70+ for design that a working designer would actually be proud of today.
 
 Respond with ONLY a JSON object, no other text:
 {
-  "design_score": <0-100, where 100 = looks like a polished 2026 site, 50 = clearly aging (~2015), 20 = looks abandoned or 2000s-era>,
+  "design_score": <0-100, calibrated to the strict bands above>,
   "era_guess": "<the design era it feels like, e.g. '2012-2015'>",
-  "verdicts": [<exactly 3 short strings — the most dated things a customer would notice, concrete and specific to THIS screenshot>],
-  "worth_keeping": [<1-2 short strings — visual elements that genuinely work and should survive a redesign>]
+  "verdicts": [<exactly 3 short strings — the most dated or weakest things a customer would notice, concrete and specific to THIS screenshot>],
+  "worth_keeping": [<1-2 short strings — visual elements that genuinely work; use an empty array if nothing stands out>]
 }`;
 
 export default async function handler(req, res) {
@@ -43,7 +52,11 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
-  if (!process.env.ANTHROPIC_API_KEY) {
+  // The env var must be JUST the key (sk-ant-...). Guard against a key with
+  // stray whitespace or, worse, a whole pasted curl command — either would
+  // make Headers.append throw a cryptic 500 downstream.
+  const apiKey = (process.env.ANTHROPIC_API_KEY || '').trim();
+  if (!apiKey || /\s/.test(apiKey) || !apiKey.startsWith('sk-ant-')) {
     return res.status(503).json({ error: 'Design review not configured' });
   }
 
@@ -77,7 +90,7 @@ export default async function handler(req, res) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
       },

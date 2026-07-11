@@ -576,10 +576,14 @@ async function runDesignCheck(url, shot, era, techScore) {
     } catch (e) { /* fall back to era signals */ }
   }
 
-  // Blend: the AI's aesthetic judgment leads, era fingerprints ground it.
+  // The AI's visual verdict IS the design score. Era fingerprints can only
+  // drag it DOWN (a tidy-looking site running jQuery 1.x is still aging) —
+  // they must never pull a dated-looking site UP toward passing.
+  // Without the AI (era-only fallback) we cap the score: clean code alone
+  // can't prove a site looks modern, so it can't earn a high freshness score.
   const design = ai
-    ? Math.round(0.6 * ai.design_score + 0.4 * era.eraScore)
-    : era.eraScore;
+    ? Math.min(ai.design_score, Math.round(0.75 * ai.design_score + 0.25 * era.eraScore))
+    : Math.min(era.eraScore, 70);
   const color = designColor(design);
 
   ringSlot.outerHTML = designRingHtml(design, color, ai ? 'Design freshness' : 'Build era (signals)', false);
@@ -596,7 +600,9 @@ async function runDesignCheck(url, shot, era, techScore) {
     items.push(`<div class="score-item"><span class="dot good"></span><span>Worth keeping: ${escHtml(v)}</span></div>`);
   });
   if (!verdicts.length) {
-    items.push('<div class="score-item"><span class="dot good"></span><span>No aging signals detected — this looks like a recent build.</span></div>');
+    items.push(ai
+      ? '<div class="score-item"><span class="dot good"></span><span>Nothing visually dated stood out — this reads as a current design.</span></div>'
+      : '<div class="score-item"><span class="dot warn"></span><span>No code-level aging detected, but this is a technical read only — it can\'t judge how the design actually looks.</span></div>');
   }
 
   box.innerHTML = `
