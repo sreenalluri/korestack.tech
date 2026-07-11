@@ -43,6 +43,15 @@ SCORING BANDS — calibrate honestly to what you see:
 - 20-39: clearly old or neglected.
 - 0-19: broken, empty, or straight out of the 2000s.
 
+CRITICAL — your design_score and era_guess must tell the same story; they cannot contradict:
+- feels 2023 or newer  → 78-100
+- feels 2020-2022       → 66-82
+- feels 2017-2019       → 46-64
+- feels 2014-2016       → 32-50
+- feels 2011-2013       → 22-40
+- feels pre-2011        → 0-24
+If you would date a site to 2016, it CANNOT score 70. Pick the era first, then place the score within that era's range based on execution quality. A genuinely modern redesign should read as 2023+ and score accordingly; a dated site should read as its real era and score there — that separation is the whole point.
+
 Score what's in front of you fairly. If the design is strong, say so with a high number; if it's dated, place it low. Respond with ONLY a JSON object, no other text:
 {
   "design_score": <0-100 per the bands above>,

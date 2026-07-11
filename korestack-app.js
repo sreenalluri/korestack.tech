@@ -623,21 +623,26 @@ function designColor(score) {
   return '#D64545';
 }
 
-async function runDesignCheck(url, shot, era, techScore) {
+async function runDesignCheck(url, shots, era, techScore) {
   const box = document.getElementById('design-check');
   const ringSlot = document.getElementById('design-ring-slot');
   if (!box || !ringSlot) return;
 
+  // `shots` is an ordered list: prefer the full-page render, fall back to the
+  // thumbnail. A very long page's full-page screenshot can exceed the image
+  // limits and 500 — so if the first shot fails, retry with the smaller one
+  // rather than silently dropping the AI verdict.
+  const candidates = (Array.isArray(shots) ? shots : [shots]).filter(Boolean);
   let ai = null;
-  if (shot) {
+  for (const shot of candidates) {
     try {
       const r = await fetch('/api/design-check', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url, screenshot: shot }),
       });
-      if (r.ok) ai = await r.json();
-    } catch (e) { /* fall back to era signals */ }
+      if (r.ok) { ai = await r.json(); break; }
+    } catch (e) { /* try the next candidate, then fall back to era signals */ }
   }
 
   // The AI's visual verdict IS the design score. Era fingerprints can only
@@ -710,10 +715,11 @@ function renderScore(data, url) {
   const shot = data?.lighthouseResult?.audits?.['final-screenshot']?.details?.data;
   const shotOk = typeof shot === 'string' && shot.startsWith('data:image/');
   // Critic input: prefer the FULL-PAGE render (shows the whole design, not just
-  // the cramped above-the-fold thumbnail) so the AI judges the real site.
+  // the cramped above-the-fold thumbnail), with the thumbnail as fallback for
+  // very long pages whose full-page shot is too large to score.
   const fullPage = data?.lighthouseResult?.fullPageScreenshot?.screenshot?.data;
-  const criticShot = (typeof fullPage === 'string' && fullPage.startsWith('data:image/'))
-    ? fullPage : (shotOk ? shot : null);
+  const fullPageOk = typeof fullPage === 'string' && fullPage.startsWith('data:image/');
+  const criticShots = [fullPageOk ? fullPage : null, shotOk ? shot : null].filter(Boolean);
 
   const era = computeEraSignals(data);
 
@@ -766,7 +772,7 @@ function renderScore(data, url) {
   results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   // Kick off the AI design review without blocking the technical results.
-  runDesignCheck(url, criticShot, era, score);
+  runDesignCheck(url, criticShots, era, score);
 }
 
 function scorerErrorMessage(err) {
