@@ -143,7 +143,7 @@
       <p class="hero-sub reveal" data-delay="3" style="font-family: &quot;Avenir Next&quot;; color: rgb(0, 0, 0); font-weight: 500; margin: 0px 0px 40px">Korestack connects small businesses with human AI-ready experts who build, deploy, and scale AI solutions — FAST. No Fluff, No Long Timelines. Just Results.</p>
       <div class="hero-actions reveal" data-delay="4">
         <button class="btn-primary" onclick="showPage('services')" style="background: #21305c;">Explore Services <span class="arrow">→</span></button>
-        <button class="btn-primary" onclick="showPage('contact')" style="background: #21305c;">Talk to an Expert <span class="arrow">→</span></button>
+        <button class="btn-secondary" onclick="showPage('contact')">Talk to an Expert</button>
       </div>
     </div>
 
@@ -277,41 +277,48 @@
   <div class="services-hero" style="background: #21305c; color: #fff; border-radius: 18px;">
     <p class="section-eyebrow reveal" style="color: var(--teal-light)">What we do</p>
     <h1 class="section-title reveal" data-delay="1" style="color: #fff;">Services built for<br/>small business <em style="font-style: italic; color: var(--teal-light)">scale</em>.</h1>
-    <p class="section-body reveal" data-delay="2" style="color: rgba(255,255,255,0.7);">From strategy to implementation, Korestack delivers AI solutions that fit your team, your budget, and your goals — with speed as our standard.</p>
+    <p class="section-body reveal" data-delay="2" style="color: rgba(255,255,255,0.7);">Modern websites, fractional AI expertise, and growth programs — everything a small business needs to move fast and win, without the enterprise price tag.</p>
   </div>
 
-  <div class="services-grid">
-    <div class="service-card purple reveal" data-delay="1">
+  <div style="text-align: center; padding: 56px 48px 0;" class="reveal">
+    <p class="section-eyebrow" style="display: inline-flex; margin-bottom: 12px;">What we offer</p>
+    <h2 style="font-family: 'DM Serif Display', serif; font-size: clamp(26px, 3.2vw, 36px); color: var(--text-primary); margin: 0; line-height: 1.2; letter-spacing: -0.01em;">Modern sites, expert advice, delivered <em style="font-style: italic; color: var(--teal-mid);">fast</em>.</h2>
+    <p style="font-size: 15px; color: var(--text-secondary); max-width: 560px; margin: 14px auto 0;">For small businesses whose current site is losing them customers — and whose next move needs a real expert in their corner.</p>
+  </div>
+
+  <div class="services-grid" style="padding-top: 32px;">
+    <div class="service-card purple reveal" data-delay="1" onclick="showPage('rebuild', event)" style="cursor: pointer;">
       <div class="service-number">01</div>
-      <div class="service-title">AI Strategy & Roadmapping</div>
-      <p class="service-desc">Not sure where AI fits in your business? We map the opportunity, prioritize the wins, and give you a clear path forward — in days, not months.</p>
+      <div class="service-title">Website Design & Rebuild</div>
+      <p class="service-desc">Modern, mobile-first sites built around how your business actually works. Delivered in weeks, not months — with a design tailored to your brand and customers.</p>
       <ul class="service-list">
-        <li>AI readiness assessment</li>
-        <li>Use-case identification & prioritization</li>
-        <li>90-day AI growth roadmap</li>
-        <li>ROI modeling & business case</li>
+        <li>Custom design + copywriting</li>
+        <li>Mobile-first, HTTPS, fast-loading by default</li>
+        <li>Online booking, forms, and payments integrated</li>
+        <li>Live in 2–3 weeks with 2 revision rounds</li>
       </ul>
+      <div class="service-learn">Learn more &amp; score your site free <span class="arrow">→</span></div>
     </div>
     <div class="service-card teal reveal" data-delay="2">
       <div class="service-number">02</div>
-      <div class="service-title">AI Implementation & Engineering</div>
-      <p class="service-desc">We build and deploy AI solutions that actually work in the real world — integrated into your existing tools, workflows, and teams.</p>
+      <div class="service-title">Managed Hosting & Edits</div>
+      <p class="service-desc">We keep your site fast, secure, and up to date — so you never have to think about hosting, downtime, or "I need to change my hours" again.</p>
       <ul class="service-list">
-        <li>Custom AI tool development</li>
-        <li>LLM integration & fine-tuning</li>
-        <li>Workflow automation with AI</li>
-        <li>API & system integrations</li>
+        <li>Reliable hosting with automatic SSL</li>
+        <li>Ongoing content updates (hours, prices, photos)</li>
+        <li>Uptime monitoring + weekly health checks</li>
+        <li>Priority support with 24-hour response</li>
       </ul>
     </div>
     <div class="service-card purple reveal" data-delay="3">
       <div class="service-number">03</div>
-      <div class="service-title">AI Training & Enablement</div>
-      <p class="service-desc">Empower your team to use AI confidently and effectively. We deliver hands-on training tailored to how your business actually operates.</p>
+      <div class="service-title">Local SEO & Google Presence</div>
+      <p class="service-desc">Being on Google isn't the same as being found on Google. We fix the technical basics and optimize your listings so local customers actually reach you.</p>
       <ul class="service-list">
-        <li>Team AI literacy workshops</li>
-        <li>Role-specific AI playbooks</li>
-        <li>Prompt engineering training</li>
-        <li>Ongoing coaching & support</li>
+        <li>Google Business Profile optimization</li>
+        <li>Local schema markup + structured data</li>
+        <li>Page-speed and mobile audit + fixes</li>
+        <li>Monthly ranking + traffic reports</li>
       </ul>
     </div>
     <div class="service-card teal reveal" data-delay="4">
@@ -327,24 +334,24 @@
     </div>
     <div class="service-card purple reveal" data-delay="5">
       <div class="service-number">05</div>
-      <div class="service-title">Data & Analytics</div>
-      <p class="service-desc">Turn your business data into decisions. We build dashboards, reporting pipelines, and AI-powered insights that help you act fast and smart.</p>
+      <div class="service-title">Growth Acceleration Programs</div>
+      <p class="service-desc">A structured, end-to-end engagement to take your business from stuck to scaling — with measurable growth milestones at every step.</p>
       <ul class="service-list">
-        <li>Data audit & cleanup</li>
-        <li>Business intelligence dashboards</li>
-        <li>Predictive analytics models</li>
-        <li>KPI tracking & reporting</li>
+        <li>Full-stack growth transformation</li>
+        <li>30/60/90 day sprint programs</li>
+        <li>Progress tracking & reporting</li>
+        <li>Post-launch optimization</li>
       </ul>
     </div>
     <div class="service-card teal reveal" data-delay="6">
       <div class="service-number">06</div>
-      <div class="service-title">Growth Acceleration Programs</div>
-      <p class="service-desc">A structured, end-to-end engagement to take your business from AI-curious to AI-powered — with measurable growth milestones at every step.</p>
+      <div class="service-title">Business Automation</div>
+      <p class="service-desc">Repetitive work eats hours and morale. We find the tasks your team shouldn't be doing manually, wire up the automation, and hand you back your week.</p>
       <ul class="service-list">
-        <li>Full-stack AI transformation</li>
-        <li>30/60/90 day sprint programs</li>
-        <li>Progress tracking & reporting</li>
-        <li>Post-launch optimization</li>
+        <li>Workflow automation across your tools</li>
+        <li>AI-powered document + email handling</li>
+        <li>CRM, email, and accounting connected</li>
+        <li>Custom automations for your unique process</li>
       </ul>
     </div>
   </div>
@@ -489,12 +496,12 @@
           <label class="form-label" for="cf-service">I'm interested in</label>
           <select class="form-select" id="cf-service" name="service">
             <option value="">Select a service...</option>
-            <option>AI Strategy & Roadmapping</option>
-            <option>AI Implementation & Engineering</option>
-            <option>AI Training & Enablement</option>
+            <option>Website Design & Rebuild</option>
+            <option>Managed Hosting & Edits</option>
+            <option>Local SEO & Google Presence</option>
             <option>Fractional AI Consulting</option>
-            <option>Data & Analytics</option>
             <option>Growth Acceleration Program</option>
+            <option>Business Automation</option>
             <option>Not sure yet — let's talk</option>
           </select>
         </div>
@@ -810,6 +817,168 @@
     <div class="footer-links">
       <a onclick="showPage('home', event)">Home</a>
       <a onclick="showPage('services', event)">Services</a>
+      <a onclick="showPage('contact', event)">Contact</a>
+      <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════
+     WEBSITE DESIGN & REBUILD PAGE
+════════════════════════════════════ -->
+<div id="page-rebuild" class="page" data-screen-label="05 Website Rebuild">
+
+  <div class="services-hero" style="background: #21305c; color: #fff; border-radius: 18px;">
+    <p class="section-eyebrow reveal" style="color: var(--teal-light)">Website Design &amp; Rebuild</p>
+    <h1 class="section-title reveal" data-delay="1" style="color: #fff;">Your website is your<br/><em style="font-style: italic; color: var(--teal-light)">first impression.</em></h1>
+    <p class="section-body reveal" data-delay="2" style="color: rgba(255,255,255,0.7);">Most customers meet your business online before they ever call or walk in. If your site looks dated, loads slowly, or breaks on a phone, they don't give you a second chance — they quietly pick the competitor who looks ready.</p>
+    <div class="hero-actions reveal" data-delay="3" style="margin-top: 32px;">
+      <button class="btn-primary" style="background: #fff; color: #16182b;" onclick="scrollToScorer()">Score My Website — Free <span class="arrow">→</span></button>
+      <button class="btn-secondary" style="color: #fff; border-color: rgba(255,255,255,0.4);" onclick="goToContact('Website Design & Rebuild')">Talk to an Expert</button>
+    </div>
+  </div>
+
+  <!-- Why modern matters -->
+  <section class="why">
+    <div class="why-grid">
+      <div class="why-left" style="padding: 30px">
+        <p class="section-eyebrow reveal">Why it matters</p>
+        <h2 class="section-title reveal" data-delay="1">An outdated site<br/>quietly costs you<br/>customers.</h2>
+        <p class="section-body reveal" data-delay="2" style="margin-bottom:40px;">You never meet the people who found you online, formed an opinion in seconds, and left. A modern site turns that silent leak into calls, bookings, and orders.</p>
+        <div class="why-items">
+          <div class="why-item reveal" data-delay="1">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">First impressions are digital now</div>
+              <div class="why-item-body">Stanford research found 75% of people judge a business's credibility by its website design alone — before they read a single word about what you do.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="2">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Speed decides sales</div>
+              <div class="why-item-body">Google found 53% of mobile visitors abandon a page that takes over 3 seconds to load. Every extra second is a customer walking out of a store you paid to open.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="3">
+            <div class="why-icon purple">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Google ranks modern sites first</div>
+              <div class="why-item-body">Mobile-friendliness, HTTPS, and page speed are ranking signals. An outdated site doesn't just look old — it gets buried under competitors who invested.</div>
+            </div>
+          </div>
+          <div class="why-item reveal" data-delay="4">
+            <div class="why-icon teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <div class="why-item-title">Trust converts</div>
+              <div class="why-item-body">"Not secure" warnings, a 2019 copyright footer, and broken pages tell customers nobody's home. Current info and a secure connection tell them you're open for business.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="why-visual reveal" style="padding: 48px 40px; background: #21305c;">
+        <div class="why-visual-quote">
+          Visitors judge your site <em style="color: var(--teal-light)">before</em> they read a single word.
+        </div>
+        <div class="rebuild-stats">
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">75%</div>
+            <div class="rebuild-stat-label">judge your credibility by design alone</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">53%</div>
+            <div class="rebuild-stat-label">leave if a mobile page takes over 3 seconds</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">88%</div>
+            <div class="rebuild-stat-label">are less likely to return after a bad site experience</div>
+          </div>
+          <div class="rebuild-stat">
+            <div class="rebuild-stat-num">2–3<span style="font-size: 0.5em;"> wks</span></div>
+            <div class="rebuild-stat-label">is all a modern rebuild takes with us</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section class="process">
+    <p class="section-eyebrow reveal">Our approach</p>
+    <h2 class="section-title reveal" data-delay="1">Modernize — without losing<br/>what already <em style="font-style: italic; color: rgb(93, 202, 165)">works</em>.</h2>
+    <p class="section-body reveal" data-delay="2" style="max-width: 620px;">A rebuild shouldn't erase the years you've put into your business. We keep the content, rankings, and personality you've earned — and rebuild everything that's holding you back.</p>
+    <div class="process-steps reveal" data-delay="3">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Listen &amp; audit</div>
+        <p class="step-desc">We inventory what's working today — the pages that rank on Google, the content customers rely on, and the personality that makes your business yours.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Keep what's earned</div>
+        <p class="step-desc">Your brand, your best copy, your search rankings, your reviews. What took years to build carries over — nothing your customers depend on disappears.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Rebuild modern</div>
+        <p class="step-desc">Mobile-first design, loads in under two seconds, HTTPS everywhere, booking and payments built in. Modern under the hood, not just in the mirror.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">04</div>
+        <div class="step-title">Launch without losing</div>
+        <p class="step-desc">Every old link redirects to its new home, so Google — and your customers — never hit a dead end. We verify speed and rankings after launch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Free website scorer -->
+  <section class="scorer" id="scorer">
+    <div class="scorer-inner">
+      <p class="section-eyebrow reveal" style="display: inline-flex;">Free website check</p>
+      <h2 class="section-title reveal" data-delay="1">How modern is <em style="font-style: italic; color: var(--teal-mid);">your</em> website?</h2>
+      <p class="section-body reveal" data-delay="2">Enter your address and we'll run it through Google's own Lighthouse quality checks — speed, mobile experience, security, and search readiness. Usually takes under a minute. No email required.</p>
+      <form class="scorer-form reveal" data-delay="3" onsubmit="runSiteScore(event)">
+        <input class="scorer-input" id="scorer-url" type="text" inputmode="url" autocomplete="url" placeholder="yourbusiness.com" aria-label="Your website address" required/>
+        <button class="scorer-btn" id="scorer-btn" type="submit">Score My Site <span class="arrow">→</span></button>
+      </form>
+      <div class="scorer-status" id="scorer-status" role="status" aria-live="polite"></div>
+      <div class="scorer-results" id="scorer-results" hidden></div>
+      <p class="scorer-note reveal" data-delay="4">Runs Google Lighthouse from your browser. We don't see, store, or share what you check.</p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-banner" style="background-color: rgb(33, 48, 92)">
+    <p class="cta-eyebrow reveal">Ready when you are</p>
+    <h2 class="cta-title reveal" data-delay="1">See your site <em style="color: rgb(93, 202, 165)">reimagined</em> — free.</h2>
+    <p class="reveal" data-delay="2" style="font-size:16px;color:rgba(255,255,255,0.65);margin:-12px auto 32px;font-weight:500;max-width:480px;">Tell us about your business and we'll show you what a modern rebuild looks like. No commitment, no jargon — live in 2–3 weeks if you love it.</p>
+    <button class="btn-primary reveal" data-delay="3" style="background: #fff; color: rgb(13, 14, 14); box-shadow: 0 12px 30px -10px rgba(0,0,0,0.2)" onclick="goToContact('Website Design & Rebuild')">Get My Free Rebuild Plan <span class="arrow">→</span></button>
+  </section>
+
+  <footer>
+    <div class="footer-left">
+      <svg width="34" height="34" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="6" fill="url(#nav-logo-grad)"/>
+        <g transform="translate(10, 11)">
+          <rect x="0"    y="12.78" width="20"   height="5" rx="1.11" fill="#5DCAA5"/>
+          <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+          <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+        </g>
+      </svg>
+      <span class="footer-copy">© 2026 KORESTACK.TECH · Houston, TX</span>
+    </div>
+    <div class="footer-links">
+      <a onclick="showPage('home', event)">Home</a>
+      <a onclick="showPage('services', event)">Services</a>
+      <a onclick="showPage('careers', event)">Careers</a>
       <a onclick="showPage('contact', event)">Contact</a>
       <a href="mailto:hello@korestack.tech">hello@korestack.tech</a>
     </div>

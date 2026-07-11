@@ -62,9 +62,10 @@ function showPage(id, evt, skipHistory) {
   document.querySelector('.nav-links')?.classList.remove('open');
   document.querySelector('.nav-toggle')?.classList.remove('open');
 
-  // update nav active state
+  // update nav active state (sub-pages highlight their parent section)
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('is-active'));
-  const navLink = document.querySelector(`.nav-links a[data-page="${id}"]`);
+  const navId = id === 'rebuild' ? 'services' : id;
+  const navLink = document.querySelector(`.nav-links a[data-page="${navId}"]`);
   if (navLink) navLink.classList.add('is-active');
 
   isTransitioning = true;
@@ -110,25 +111,6 @@ function showPage(id, evt, skipHistory) {
     isTransitioning = false;
   }, 540);
 }
-
-// ===== Browser history (back/forward button support) =====
-const VALID_PAGES = new Set(['home', 'services', 'contact', 'careers']);
-
-window.addEventListener('popstate', (e) => {
-  const id = e.state?.page || location.hash.replace('#', '') || 'home';
-  if (VALID_PAGES.has(id)) showPage(id, null, true);
-});
-
-// Navigate to the page in the URL hash on initial load
-(function () {
-  const id = location.hash.replace('#', '');
-  if (VALID_PAGES.has(id) && id !== 'home') {
-    history.replaceState({ page: id }, '', '#' + id);
-    showPage(id, null, true);
-  } else {
-    history.replaceState({ page: 'home' }, '', location.href);
-  }
-})();
 
 function runRevealsIn(scope) {
   scope.querySelectorAll('.reveal').forEach(el => el.classList.remove('in'));
@@ -345,6 +327,344 @@ function bindTweakPanel() {
     try { window.parent.postMessage({type: '__edit_mode_dismissed'}, '*'); } catch(e) {}
   });
 }
+
+// ===== Website scorer (Rebuild page) =====
+// Calls Google's PageSpeed Insights API directly from the visitor's browser —
+// no backend, no API key. Quota is per-visitor-IP, so it scales naturally.
+// If Google ever requires a key, create one restricted to this domain and
+// set PSI_KEY below.
+const PSI_ENDPOINT = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
+const PSI_KEY = 'AIzaSyCzKCo4uJBkpGZh0GdqK32HMlM718IuC9c';
+
+const SCORER_STATUS_MESSAGES = [
+  'Fetching your site…',
+  'Running Google Lighthouse…',
+  'Testing the mobile experience…',
+  'Checking security & search readiness…',
+  'Crunching the score…',
+  'Almost there — slow sites take longer to test…',
+];
+
+let scorerTimer = null;
+
+function scrollToScorer() {
+  document.getElementById('scorer')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  setTimeout(() => document.getElementById('scorer-url')?.focus({ preventScroll: true }), 650);
+}
+
+// Navigate to the contact page with the service dropdown preselected,
+// so leads arriving from a service page are attributed to that service.
+function goToContact(service) {
+  showPage('contact');
+  if (!service) return;
+  const sel = document.getElementById('cf-service');
+  if (sel && [...sel.options].some((o) => o.value === service || o.text === service)) {
+    sel.value = service;
+  }
+}
+
+function normalizeSiteUrl(raw) {
+  let input = (raw || '').trim();
+  if (!input) return null;
+  if (!/^https?:\/\//i.test(input)) input = 'https://' + input;
+  try {
+    const u = new URL(input);
+    if (!u.hostname.includes('.')) return null;
+    return u.href;
+  } catch (e) {
+    return null;
+  }
+}
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+function psiCategory(data, key) {
+  const s = data?.lighthouseResult?.categories?.[key]?.score;
+  return s == null ? null : Math.round(s * 100);
+}
+
+function psiAuditPass(data, id) {
+  const a = data?.lighthouseResult?.audits?.[id];
+  if (!a || a.score == null) return null;
+  return a.score >= 0.9;
+}
+
+function computeSiteScore(m) {
+  // Mirrors the weighting we use in professional audits:
+  // performance 35, HTTPS 15, mobile 15, SEO 15, best-practices 10, a11y 10.
+  const parts = [
+    [m.perf, 35],
+    [m.https == null ? null : (m.https ? 100 : 0), 15],
+    [m.viewport == null ? null : (m.viewport ? 100 : 0), 15],
+    [m.seo, 15],
+    [m.bp, 10],
+    [m.a11y, 10],
+  ];
+  let total = 0, weight = 0;
+  parts.forEach(([v, w]) => {
+    if (v != null) { total += v * w; weight += w; }
+  });
+  return weight ? Math.round(total / weight) : null;
+}
+
+function gradeForScore(score) {
+  if (score >= 85) return {
+    label: 'Modern & healthy', color: '#1D9E75',
+    blurb: 'Your website is doing its job — fast, secure, and mobile-ready. Keep it maintained and it will keep earning.',
+  };
+  if (score >= 70) return {
+    label: 'Solid, with gaps', color: '#534AB7',
+    blurb: 'The foundation is there, but a few gaps are quietly costing you visitors. All of them are fixable.',
+  };
+  if (score >= 50) return {
+    label: 'Showing its age', color: '#E09F3E',
+    blurb: 'Your site works, but it is aging where customers notice most: speed, mobile experience, and trust signals.',
+  };
+  return {
+    label: 'Costing you customers', color: '#D64545',
+    blurb: 'Your website is likely turning people away before you ever hear from them. The good news: this is exactly what a rebuild fixes.',
+  };
+}
+
+function buildFindings(data, m) {
+  const issues = [];
+  const wins = [];
+
+  if (m.https === false) {
+    issues.push(['bad', 'Not served over HTTPS — Chrome flags your site "Not secure" right in the address bar.']);
+  } else if (m.https) {
+    wins.push('Secure HTTPS connection — no browser warnings.');
+  }
+
+  if (m.viewport === false) {
+    issues.push(['bad', "Not mobile-responsive — the layout doesn't adapt to phones, where most local customers find you."]);
+  } else if (m.viewport) {
+    wins.push('Mobile-ready layout that adapts to phones.');
+  }
+
+  const lcp = data?.lighthouseResult?.audits?.['largest-contentful-paint']?.displayValue;
+  if (m.perf != null) {
+    if (m.perf < 50) {
+      issues.push(['bad', `Slow on mobile — performance ${m.perf}/100` +
+        (lcp ? `, main content takes ${escHtml(lcp)} to appear` : '') +
+        '. Half of visitors give up after 3 seconds.']);
+    } else if (m.perf < 80) {
+      issues.push(['warn', `Middling mobile speed (${m.perf}/100)` +
+        (lcp ? ` — main content appears in ${escHtml(lcp)}` : '') +
+        '. Faster competitors will feel more trustworthy.']);
+    } else {
+      wins.push(`Fast on mobile — performance ${m.perf}/100.`);
+    }
+  }
+
+  if (m.seo != null) {
+    if (m.seo < 80) {
+      issues.push(['warn', `Search-engine basics need work (SEO ${m.seo}/100) — Google may struggle to understand and rank your pages.`]);
+    } else {
+      wins.push(`Search-engine fundamentals in place (SEO ${m.seo}/100).`);
+    }
+  }
+
+  if (m.a11y != null) {
+    if (m.a11y < 80) {
+      issues.push(['warn', `Accessibility gaps (${m.a11y}/100) — harder for some customers to use, and a growing legal risk for businesses.`]);
+    } else {
+      wins.push(`Accessible to most visitors (${m.a11y}/100).`);
+    }
+  }
+
+  if (m.bp != null) {
+    if (m.bp < 80) {
+      issues.push(['warn', `Fails modern browser best-practice checks (${m.bp}/100) — often a sign of an aging platform or old plugins.`]);
+    } else {
+      wins.push(`Follows modern browser best practices (${m.bp}/100).`);
+    }
+  }
+
+  return { issues, wins };
+}
+
+function renderScore(data, url) {
+  // A 200 response can still carry a failed Lighthouse run (e.g. NO_FCP,
+  // ERRORED_DOCUMENT_REQUEST). Don't score on partial data — route to the
+  // "couldn't analyze" path instead of silently renormalizing weights.
+  const rte = data?.lighthouseResult?.runtimeError;
+  if (rte?.code && rte.code !== 'NO_ERROR') {
+    const e = new Error('Lighthouse runtime error: ' + rte.code);
+    e.httpStatus = 500;
+    throw e;
+  }
+
+  const m = {
+    perf:     psiCategory(data, 'performance'),
+    a11y:     psiCategory(data, 'accessibility'),
+    bp:       psiCategory(data, 'best-practices'),
+    seo:      psiCategory(data, 'seo'),
+    https:    psiAuditPass(data, 'is-on-https'),
+    viewport: psiAuditPass(data, 'viewport'),
+  };
+  const score = computeSiteScore(m);
+  if (score == null) throw new Error('Lighthouse returned no scores');
+
+  const grade = gradeForScore(score);
+  const { issues, wins } = buildFindings(data, m);
+  const shot = data?.lighthouseResult?.audits?.['final-screenshot']?.details?.data;
+  const shotOk = typeof shot === 'string' && shot.startsWith('data:image/');
+
+  const results = document.getElementById('scorer-results');
+  results.innerHTML = `
+    <div class="score-head">
+      <div class="score-ring" style="--p:${score};--ring:${grade.color};">
+        <div class="score-ring-inner">
+          <div class="score-num">${score}</div>
+          <div class="score-denom">OUT OF 100</div>
+        </div>
+      </div>
+      <div class="score-meta">
+        <div class="score-grade" style="color:${grade.color}">${grade.label}</div>
+        <div class="score-url">${escHtml(url)}</div>
+        <div class="score-blurb">${grade.blurb}</div>
+      </div>
+      ${shotOk ? `<img class="score-shot" src="${escHtml(shot)}" alt="Your site on a phone"/>` : ''}
+    </div>
+    <div class="score-cols">
+      <div>
+        <div class="score-col-title bad">Needs attention</div>
+        ${issues.length
+          ? issues.map(([lvl, t]) => `<div class="score-item"><span class="dot ${lvl}"></span><span>${t}</span></div>`).join('')
+          : '<div class="score-item"><span class="dot good"></span><span>Nothing major — nice work.</span></div>'}
+      </div>
+      <div>
+        <div class="score-col-title good">Worth keeping</div>
+        ${wins.length
+          ? wins.map((t) => `<div class="score-item"><span class="dot good"></span><span>${t}</span></div>`).join('')
+          : '<div class="score-item"><span class="dot warn"></span><span>Not much is working in your favor yet — a rebuild would start fresh on solid ground.</span></div>'}
+      </div>
+    </div>
+    <div class="score-cta">
+      <div class="score-cta-text">${score >= 85
+        ? "Your site's in good shape. If you'd like it to stay that way — hosting, edits, monitoring — that's exactly what we do."
+        : "We'll show you exactly what a modern rebuild fixes — free plan, no obligation, live in 2–3 weeks."}</div>
+      <button class="btn-primary" style="background:#21305c;" onclick="goToContact('${score >= 85 ? 'Managed Hosting & Edits' : 'Website Design & Rebuild'}')">${score >= 85 ? 'Ask About Managed Hosting' : 'Get My Free Rebuild Plan'} <span class="arrow">→</span></button>
+    </div>`;
+  results.hidden = false;
+  results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function scorerErrorMessage(err) {
+  if (err.name === 'AbortError') {
+    return 'This is taking longer than usual — the site may be extremely slow, which is a finding in itself.';
+  }
+  if (err.httpStatus === 429) {
+    return 'Google’s analyzer is busy right now. Give it a minute and try again.';
+  }
+  if (err.httpStatus >= 500) {
+    return 'Google’s tools couldn’t reach or analyze this site — it may be unreachable, blocking automated checks, or having technical trouble. That’s usually a sign worth investigating.';
+  }
+  if (err.httpStatus === 400) {
+    return 'Google couldn’t check that address. Double-check the spelling and try again.';
+  }
+  return 'Couldn’t complete the check right now. Please try again in a moment.';
+}
+
+// Every error state gets a human path forward, not just "try again".
+function renderScorerErrorCta() {
+  const results = document.getElementById('scorer-results');
+  if (!results) return;
+  results.innerHTML = `
+    <div class="score-cta" style="border-top:none;margin-top:0;padding-top:0;">
+      <div class="score-cta-text">Prefer a human? We’ll audit your site by hand and send you what we find — free, no obligation.</div>
+      <button class="btn-primary" style="background:#21305c;" onclick="goToContact('Website Design & Rebuild')">Get a Free Manual Audit <span class="arrow">→</span></button>
+    </div>`;
+  results.hidden = false;
+}
+
+async function runSiteScore(evt) {
+  if (evt) evt.preventDefault();
+
+  const btn = document.getElementById('scorer-btn');
+  const status = document.getElementById('scorer-status');
+  const results = document.getElementById('scorer-results');
+  if (!btn || !status || !results) return;
+
+  const url = normalizeSiteUrl(document.getElementById('scorer-url')?.value);
+  if (!url) {
+    status.textContent = 'That doesn’t look like a web address — try something like yourbusiness.com';
+    status.className = 'scorer-status error';
+    return;
+  }
+
+  const originalBtn = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Scoring…';
+  results.hidden = true;
+  status.className = 'scorer-status';
+
+  let msgIdx = 0;
+  status.textContent = SCORER_STATUS_MESSAGES[0];
+  clearInterval(scorerTimer);
+  scorerTimer = setInterval(() => {
+    msgIdx = Math.min(msgIdx + 1, SCORER_STATUS_MESSAGES.length - 1);
+    status.textContent = SCORER_STATUS_MESSAGES[msgIdx];
+  }, 6000);
+
+  const params = new URLSearchParams({ url, strategy: 'mobile' });
+  ['PERFORMANCE', 'ACCESSIBILITY', 'BEST_PRACTICES', 'SEO'].forEach((c) => params.append('category', c));
+  if (PSI_KEY) params.set('key', PSI_KEY);
+
+  // The abort timer stays armed through the body download, not just the
+  // headers — PSI responses run 1–4 MB and can stall on flaky connections.
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 95000);
+  try {
+    const resp = await fetch(`${PSI_ENDPOINT}?${params}`, { signal: controller.signal });
+
+    if (!resp.ok) {
+      const body = await resp.json().catch(() => ({}));
+      const e = new Error(body?.error?.message || `HTTP ${resp.status}`);
+      e.httpStatus = resp.status;
+      throw e;
+    }
+
+    const data = await resp.json();
+    renderScore(data, url);
+    status.textContent = '';
+    status.className = 'scorer-status';
+  } catch (err) {
+    console.error('Site score failed:', err);
+    status.textContent = scorerErrorMessage(err);
+    status.className = 'scorer-status error';
+    renderScorerErrorCta();
+  } finally {
+    clearTimeout(timeout);
+    clearInterval(scorerTimer);
+    btn.disabled = false;
+    btn.innerHTML = originalBtn;
+  }
+}
+
+// ===== Browser history (back/forward button support) =====
+const VALID_PAGES = new Set(['home', 'services', 'contact', 'careers', 'rebuild']);
+
+window.addEventListener('popstate', (e) => {
+  const id = e.state?.page || location.hash.replace('#', '') || 'home';
+  if (VALID_PAGES.has(id)) showPage(id, null, true);
+});
+
+// Navigate to the page in the URL hash on initial load
+(function () {
+  const id = location.hash.replace('#', '');
+  if (VALID_PAGES.has(id) && id !== 'home') {
+    history.replaceState({ page: id }, '', '#' + id);
+    showPage(id, null, true);
+  } else {
+    history.replaceState({ page: 'home' }, '', location.href);
+  }
+})();
 
 // ===== Init =====
 document.addEventListener('DOMContentLoaded', () => {

@@ -8,3 +8,7 @@
 
 # Claude Code workspace
 .claude/
+
+# Lead-gen pipeline lives in its own (private) repo — never publish it here.
+# It contains API keys (.env) and scraped prospect data (data/).
+korestack-pipeline/
