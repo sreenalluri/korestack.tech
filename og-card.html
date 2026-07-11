@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="robots" content="noindex"/>
+<title>Korestack OG card</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  .card {
+    position: relative;
+    width: 1200px; height: 630px;
+    background: linear-gradient(135deg, #26215C 0%, #534AB7 52%, #1D9E75 128%);
+    font-family: 'Nunito', sans-serif;
+    color: #fff;
+    overflow: hidden;
+  }
+  /* subtle grid texture */
+  .grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(circle at 70% 40%, #000 0%, transparent 70%);
+  }
+  .glow {
+    position: absolute; border-radius: 50%;
+    filter: blur(10px);
+  }
+  .glow.teal { width: 460px; height: 460px; right: -120px; top: -120px;
+    background: radial-gradient(circle, rgba(93,202,165,0.35), transparent 70%); }
+  .glow.purple { width: 420px; height: 420px; left: -140px; bottom: -160px;
+    background: radial-gradient(circle, rgba(175,169,236,0.30), transparent 70%); }
+
+  .inner { position: relative; z-index: 2; height: 100%; padding: 76px 80px;
+    display: flex; flex-direction: column; justify-content: space-between; }
+
+  .brand { display: flex; align-items: center; gap: 20px; }
+  .mark { width: 76px; height: 76px; flex-shrink: 0; }
+  .wordmark { font-size: 38px; font-weight: 800; letter-spacing: 0.14em; }
+  .wordmark .tld { color: #5DCAA5; }
+
+  .headline { max-width: 940px; }
+  .eyebrow {
+    display: inline-block;
+    font-size: 20px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase;
+    color: #5DCAA5; margin-bottom: 22px;
+  }
+  h1 {
+    font-size: 76px; line-height: 1.06; font-weight: 800; letter-spacing: -0.015em;
+  }
+  h1 em { font-family: 'DM Serif Display', serif; font-style: italic; font-weight: 400; color: #AFA9EC; }
+
+  .foot { display: flex; align-items: center; justify-content: space-between; }
+  .url { font-size: 30px; font-weight: 800; letter-spacing: 0.02em; }
+  .tagline { font-size: 24px; font-weight: 600; color: rgba(255,255,255,0.78); }
+  .pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+    padding: 12px 22px; border-radius: 40px;
+    font-size: 22px; font-weight: 700;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: #5DCAA5; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="grid"></div>
+    <div class="glow teal"></div>
+    <div class="glow purple"></div>
+    <div class="inner">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="og-mark" x1="0" y1="0" x2="0.7" y2="1">
+              <stop offset="0%" stop-color="#6a61d8"/>
+              <stop offset="100%" stop-color="#26215C"/>
+            </linearGradient>
+          </defs>
+          <rect width="40" height="40" rx="9" fill="url(#og-mark)"/>
+          <g transform="translate(10, 11)">
+            <rect x="0"    y="12.78" width="20"    height="5" rx="1.11" fill="#5DCAA5"/>
+            <rect x="2.78" y="6.67"  width="14.43" height="5" rx="1.11" fill="#AFA9EC"/>
+            <rect x="5.56" y="0.56"  width="8.89"  height="5" rx="1.11" fill="#ffffff"/>
+          </g>
+        </svg>
+        <div class="wordmark">KORESTACK<span class="tld">.tech</span></div>
+      </div>
+
+      <div class="headline">
+        <span class="eyebrow">Websites · AI · Local SEO</span>
+        <h1>Modern websites &amp; AI for<br/><em>small businesses.</em></h1>
+      </div>
+
+      <div class="foot">
+        <div class="url">korestack.tech</div>
+        <div class="pill"><span class="dot"></span> Live in 2–3 weeks</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
