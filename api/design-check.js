@@ -21,25 +21,34 @@ const ALLOWED_REFERERS = [
   'localhost:3000',
 ];
 
-const PROMPT = `You are a demanding design director at a top agency, reviewing a small business website's mobile screenshot ({url}) to decide if it needs a redesign. You reject most work as not good enough. Be harsh and specific — your job is to find what's wrong, not to reassure.
+const PROMPT = `You are a senior brand and web designer giving an honest, calibrated assessment of a small business website from a screenshot ({url}). Judge the VISUAL DESIGN only — not speed or code. Be fair: reward genuinely good modern design, and flag genuinely dated work. You are not trying to fail sites; you are placing this one accurately.
 
-Judge ONLY visual design, not speed or code. Weigh: typography (modern typefaces, clear hierarchy, generous sizing vs. tiny/system fonts), whitespace (does it breathe, or is it cramped and text-heavy), color (current and intentional, or muddy/dated/default), imagery (fresh and authentic, or dated stock photos, clip art, gradients, low-res), components (buttons, nav, cards — clean and current, or beveled/glossy/2010s), and overall composition (does it look like a business that's thriving in 2026, or coasting on a site built years ago).
+The image may be a partial or long full-page screenshot — judge the design you can see and do NOT penalize for content that is cut off or for the screenshot's own resolution.
 
-SCORING — be strict. Most small-business sites are mediocre and should land in the 30s–50s. Do NOT give benefit of the doubt; when unsure, score LOWER.
-- 85-100: genuinely current, could pass for a well-funded 2026 brand. RARE — reserve it.
-- 70-84: solid and modern but unremarkable; minor dated touches.
-- 50-69: functional but visibly aging; a customer would notice it looks a few years old.
-- 30-49: clearly dated (feels ~2012-2016); cramped, generic-template, or dated imagery.
-- 0-29: looks abandoned, broken, or straight out of the 2000s.
+Weigh these, roughly in order of importance:
+- Typography: modern typefaces, clear hierarchy, comfortable sizing (vs. tiny text, clashing or default system fonts)
+- Layout & whitespace: intentional, breathing composition (vs. cramped, cluttered, or template-default)
+- Color: current, cohesive, purposeful (vs. muddy, clashing, garish, or default-blue)
+- Imagery: fresh, high-quality, authentic (vs. dated stock, clip art, heavy gradients, low-res)
+- Components: buttons, nav, cards, forms that look current (vs. beveled/glossy/2010s chrome)
+- Composition: does it feel like a business investing in itself today
 
-A clean, fast, but BORING or GENERIC site is NOT modern — bland templates, default fonts, and stock photography should score in the 40s regardless of how "tidy" it looks. Reserve 70+ for design that a working designer would actually be proud of today.
+IMPORTANT: clean and simple is GOOD, not boring. A minimal, well-executed site (think Stripe, Apple, Linear) is the height of modern design — reward restraint and polish. Only mark simplicity down when it's genuinely generic: a default template with system fonts and no craft. Intentional, well-composed minimalism should score HIGH.
 
-Respond with ONLY a JSON object, no other text:
+SCORING BANDS — calibrate honestly to what you see:
+- 90-100: exceptional — award-worthy, could headline a design gallery.
+- 75-89: modern, clean, professional — a strong current site a good designer would happily ship today. Most well-executed redesigns belong here.
+- 60-74: solid but with some dated touches or uneven execution.
+- 40-59: visibly dated — feels a few years behind (roughly 2012–2018).
+- 20-39: clearly old or neglected.
+- 0-19: broken, empty, or straight out of the 2000s.
+
+Score what's in front of you fairly. If the design is strong, say so with a high number; if it's dated, place it low. Respond with ONLY a JSON object, no other text:
 {
-  "design_score": <0-100, calibrated to the strict bands above>,
-  "era_guess": "<the design era it feels like, e.g. '2012-2015'>",
-  "verdicts": [<exactly 3 short strings — the most dated or weakest things a customer would notice, concrete and specific to THIS screenshot>],
-  "worth_keeping": [<1-2 short strings — visual elements that genuinely work; use an empty array if nothing stands out>]
+  "design_score": <0-100 per the bands above>,
+  "era_guess": "<the era the design feels like, e.g. '2022-2026' or '2012-2015'>",
+  "verdicts": [<exactly 3 short, specific strings — the weakest or most dated things a customer would notice; if the design is strong, these are the smallest remaining nitpicks>],
+  "worth_keeping": [<1-3 short strings — the visual elements that genuinely work>]
 }`;
 
 export default async function handler(req, res) {
@@ -79,7 +88,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid url' });
   }
   const m = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/.exec(screenshot || '');
-  if (!m || m[2].length > 2000000) {
+  // Full-page screenshots run larger than the old mobile thumbnail; Anthropic
+  // downscales oversized images, so a generous cap is fine (~5MB base64).
+  if (!m || m[2].length > 5000000) {
     return res.status(400).json({ error: 'Invalid screenshot' });
   }
 

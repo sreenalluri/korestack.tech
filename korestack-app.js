@@ -706,8 +706,14 @@ function renderScore(data, url) {
 
   const grade = gradeForScore(score);
   const { issues, wins } = buildFindings(data, m);
+  // Card thumbnail: the small mobile above-the-fold shot.
   const shot = data?.lighthouseResult?.audits?.['final-screenshot']?.details?.data;
   const shotOk = typeof shot === 'string' && shot.startsWith('data:image/');
+  // Critic input: prefer the FULL-PAGE render (shows the whole design, not just
+  // the cramped above-the-fold thumbnail) so the AI judges the real site.
+  const fullPage = data?.lighthouseResult?.fullPageScreenshot?.screenshot?.data;
+  const criticShot = (typeof fullPage === 'string' && fullPage.startsWith('data:image/'))
+    ? fullPage : (shotOk ? shot : null);
 
   const era = computeEraSignals(data);
 
@@ -760,7 +766,7 @@ function renderScore(data, url) {
   results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
   // Kick off the AI design review without blocking the technical results.
-  runDesignCheck(url, shotOk ? shot : null, era, score);
+  runDesignCheck(url, criticShot, era, score);
 }
 
 function scorerErrorMessage(err) {
