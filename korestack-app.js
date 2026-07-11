@@ -44,6 +44,62 @@ function setTweak(key, value) {
   });
 }
 
+// ===== Routing =====
+// Real path-based URLs so each page is its own indexable, shareable link.
+// Vercel rewrites /services, /rebuild, etc. to index.html; this maps the
+// path to the right page and keeps <title>/description in sync per page.
+const PAGES = {
+  home: {
+    path: '/',
+    title: 'Korestack | Modern Websites & AI for Houston Small Businesses',
+    desc: "Korestack builds fast, modern websites for small businesses — plus AI consulting, hosting, and local SEO. Get a free website score. Live in 2–3 weeks.",
+  },
+  services: {
+    path: '/services',
+    title: 'Services — Websites, AI, Hosting & Local SEO | Korestack',
+    desc: 'Website design & rebuilds, managed hosting, local SEO, fractional AI consulting, growth programs, and business automation for small businesses.',
+  },
+  rebuild: {
+    path: '/rebuild',
+    title: 'Website Design & Rebuild + Free Website Score | Korestack',
+    desc: "Is your website losing you customers? Get a free score of your site's speed, mobile experience, and design — then a modern rebuild, live in 2–3 weeks.",
+  },
+  careers: {
+    path: '/careers',
+    title: 'Careers — Build AI for Small Business | Korestack',
+    desc: 'Join Korestack: ship fast, own your work end to end, and help small businesses win with modern websites and AI. Remote-first.',
+  },
+  contact: {
+    path: '/contact',
+    title: 'Contact Korestack — Talk to an Expert',
+    desc: 'Talk to Korestack about a modern website, AI, hosting, or local SEO for your small business. We reply within 24 hours.',
+  },
+};
+const PATH_TO_PAGE = Object.fromEntries(Object.entries(PAGES).map(([id, m]) => [m.path, id]));
+
+function applyPageMeta(id) {
+  const meta = PAGES[id];
+  if (!meta) return;
+  document.title = meta.title;
+  const d = document.querySelector('meta[name="description"]');
+  if (d) d.setAttribute('content', meta.desc);
+  // Per-page canonical + og:url. Critical: the static HTML canonical points at
+  // "/", so without this every route would consolidate to the homepage and
+  // never rank on its own.
+  const url = 'https://www.korestack.tech' + (meta.path === '/' ? '/' : meta.path);
+  const canon = document.querySelector('link[rel="canonical"]');
+  if (canon) canon.setAttribute('href', url);
+  const ogUrl = document.querySelector('meta[property="og:url"]');
+  if (ogUrl) ogUrl.setAttribute('content', url);
+}
+
+function setNavActive(id) {
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('is-active'));
+  const navId = id === 'rebuild' ? 'services' : id;   // sub-pages highlight their parent
+  const navLink = document.querySelector(`.nav-links a[data-page="${navId}"]`);
+  if (navLink) navLink.classList.add('is-active');
+}
+
 // ===== Page transitions =====
 let isTransitioning = false;
 
@@ -55,18 +111,15 @@ function showPage(id, evt, skipHistory) {
   if (!target || target === current) return;
 
   if (!skipHistory) {
-    history.pushState({ page: id }, '', '#' + id);
+    history.pushState({ page: id }, '', (PAGES[id] || PAGES.home).path);
   }
+  applyPageMeta(id);
 
   // close mobile nav
   document.querySelector('.nav-links')?.classList.remove('open');
   document.querySelector('.nav-toggle')?.classList.remove('open');
 
-  // update nav active state (sub-pages highlight their parent section)
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('is-active'));
-  const navId = id === 'rebuild' ? 'services' : id;
-  const navLink = document.querySelector(`.nav-links a[data-page="${navId}"]`);
-  if (navLink) navLink.classList.add('is-active');
+  setNavActive(id);
 
   isTransitioning = true;
   const mode = tweaks.transition;
@@ -792,22 +845,32 @@ async function runSiteScore(evt) {
 }
 
 // ===== Browser history (back/forward button support) =====
-const VALID_PAGES = new Set(['home', 'services', 'contact', 'careers', 'rebuild']);
+const VALID_PAGES = new Set(Object.keys(PAGES));
 
 window.addEventListener('popstate', (e) => {
-  const id = e.state?.page || location.hash.replace('#', '') || 'home';
+  const id = e.state?.page || PATH_TO_PAGE[location.pathname] || 'home';
+  // skipHistory=true so we don't push a new entry while replaying history.
+  // showPage handles nav highlight, title/meta, and the page transition.
   if (VALID_PAGES.has(id)) showPage(id, null, true);
 });
 
-// Navigate to the page in the URL hash on initial load
-(function () {
-  const id = location.hash.replace('#', '');
-  if (VALID_PAGES.has(id) && id !== 'home') {
-    history.replaceState({ page: id }, '', '#' + id);
-    showPage(id, null, true);
-  } else {
-    history.replaceState({ page: 'home' }, '', location.href);
+// Resolve the page from the real path on initial load (deep links land here
+// via the Vercel rewrite). Legacy #hash links are redirected to their path.
+// The routed page is switched in instantly — no entrance animation on first paint.
+(function initRoute() {
+  const hashId = location.hash.replace('#', '');
+  let id = PATH_TO_PAGE[location.pathname];
+  // On the root path, a legacy /#services bookmark should win over the home default
+  if ((!id || id === 'home') && VALID_PAGES.has(hashId)) id = hashId;
+  if (!id) id = 'home';
+  history.replaceState({ page: id }, '', PAGES[id].path);
+  if (id !== 'home') {
+    const home = document.getElementById('page-home');
+    const target = document.getElementById('page-' + id);
+    if (home && target) { home.classList.remove('active'); target.classList.add('active'); window.scrollTo(0, 0); }
   }
+  applyPageMeta(id);
+  setNavActive(id);
 })();
 
 // ===== Init =====
@@ -817,11 +880,5 @@ document.addEventListener('DOMContentLoaded', () => {
   countUpStats();
   bindNavScroll();
   bindTweakPanel();
-
-  // mark default nav link active
-  const initial = document.querySelector('.page.active')?.id?.replace('page-', '');
-  if (initial) {
-    const a = document.querySelector(`.nav-links a[data-page="${initial}"]`);
-    if (a) a.classList.add('is-active');
-  }
+  // Initial page + nav state is set by initRoute() (runs at parse time).
 });
