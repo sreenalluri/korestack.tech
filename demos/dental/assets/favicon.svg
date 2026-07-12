@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lumen Dental">
+  <defs>
+    <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#12b6a5"/>
+      <stop offset="1" stop-color="#0a7367"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#lg)"/>
+  <!-- Stylized tooth formed from a light/spark -->
+  <path fill="#fff" d="M32 14c-6.2 0-9.5 3.1-13.4 3.1-2.3 0-3.6-.8-4.6-.8-1 0-1.6.9-1.6 3.2 0 6.6 2.2 13 4.4 20 1.6 5.1 2.4 9.9 4.6 9.9 2.4 0 2.3-6.2 4.6-6.2h4c2.3 0 2.2 6.2 4.6 6.2 2.2 0 3-4.8 4.6-9.9 2.2-7 4.4-13.4 4.4-20 0-2.3-.6-3.2-1.6-3.2-1 0-2.3.8-4.6.8C41.5 17.1 38.2 14 32 14z" opacity=".96"/>
+  <!-- spark accent -->
+  <path fill="#bff3ec" d="M32 20.5l1.6 3.6 3.6 1.6-3.6 1.6L32 30.9l-1.6-3.6-3.6-1.6 3.6-1.6z"/>
+</svg>

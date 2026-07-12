@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Secure Checkout — Lumen Dental Studio</title>
+<meta name="description" content="Reserve your appointment with a secure deposit."/>
+<meta name="robots" content="noindex"/>
+<link rel="icon" href="/demos/dental/assets/favicon.svg" type="image/svg+xml"/>
+<meta name="theme-color" content="#10a294"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/demos/dental/assets/styles.css"/>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+
+<main id="main">
+  <section class="section" id="checkoutRoot" style="padding-top:calc(var(--nav-h) + 2.5rem)">
+    <div class="container">
+
+      <!-- Checkout view (hidden once payment succeeds) -->
+      <div id="checkoutView">
+
+        <div style="max-width:560px;margin-bottom:2rem">
+          <p class="crumbs"><a href="/demos/dental/booking.html">Booking</a> › Secure checkout</p>
+          <h1 style="font-size:var(--fs-h1);font-weight:400">Confirm &amp; reserve your visit</h1>
+          <p class="lead" style="margin-top:.75rem">One last step — a small deposit holds your appointment and is applied to your treatment.</p>
+        </div>
+
+        <div class="demo-banner" style="margin-bottom:1.75rem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span><b>Simulated payment.</b> No real card is charged. Use test card <code>4242 4242 4242 4242</code>, any future expiry, any CVC — or <a href="#" id="useTestCard">autofill it for me</a>.</span>
+        </div>
+
+        <div class="checkout">
+
+          <!-- Payment panel -->
+          <div class="pay-panel">
+            <h2>Payment details</h2>
+            <p class="text-muted" style="font-size:var(--fs-sm);margin-bottom:1.5rem">All fields are required. Card data never leaves your browser in this demo.</p>
+
+            <form id="paymentForm" class="form" novalidate>
+              <div class="field">
+                <label for="cc-name">Name on card <span class="req">*</span></label>
+                <input class="control" type="text" id="cc-name" autocomplete="cc-name" placeholder="Jordan Rivera"/>
+                <span class="err">Name on card is required.</span>
+              </div>
+
+              <div class="field">
+                <label for="cc-number">Card number <span class="req">*</span></label>
+                <div class="card-field">
+                  <input class="control" type="text" id="cc-number" inputmode="numeric" autocomplete="cc-number" placeholder="4242 4242 4242 4242" style="padding-right:64px"/>
+                  <span class="brand-icon" id="brandIcon" aria-hidden="true"></span>
+                </div>
+                <span class="err">Enter a valid card number.</span>
+              </div>
+
+              <div class="field-row">
+                <div class="field">
+                  <label for="cc-exp">Expiry <span class="req">*</span></label>
+                  <input class="control" type="text" id="cc-exp" inputmode="numeric" autocomplete="cc-exp" placeholder="MM / YY"/>
+                  <span class="err">Enter a valid expiry.</span>
+                </div>
+                <div class="field">
+                  <label for="cc-cvc">CVC <span class="req">*</span></label>
+                  <input class="control" type="text" id="cc-cvc" inputmode="numeric" autocomplete="cc-csc" placeholder="123"/>
+                  <span class="err">Enter the security code.</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="cc-zip">Billing ZIP <span class="req">*</span></label>
+                <input class="control" type="text" id="cc-zip" inputmode="numeric" autocomplete="postal-code" placeholder="77098" style="max-width:200px"/>
+                <span class="err">Enter a 5-digit ZIP.</span>
+              </div>
+
+              <!-- Decline message (shown for any non-test card) -->
+              <div class="alert alert--warn hidden" id="declineNote">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <div><b>Card declined (simulated).</b> For this demo, only the test card <b>4242 4242 4242 4242</b> is approved. Try that number to see the confirmation screen.</div>
+              </div>
+
+              <button type="submit" class="btn btn--primary btn--lg btn--block" id="payBtn">Pay <span id="payBtnAmount">$50.00</span> deposit</button>
+              <p class="secure-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> 256-bit TLS encryption · Simulated for demo purposes</p>
+            </form>
+          </div>
+
+          <!-- Order summary -->
+          <aside class="summary">
+            <div class="summary__card">
+              <h3 style="font-size:var(--fs-h3);margin-bottom:1.25rem">Your appointment</h3>
+              <div id="sumItem"></div>
+              <div id="sumRows"></div>
+              <div class="summary__divider"></div>
+              <div class="summary__total">
+                <span class="label">Due today</span>
+                <span class="amt" id="sumTotal">$50.00</span>
+              </div>
+              <p class="text-muted" style="font-size:var(--fs-xs);margin-top:1rem">The remaining balance is billed after your visit, once insurance is applied. Deposit is fully credited to your treatment.</p>
+            </div>
+            <div class="secure-row" style="justify-content:center;margin-top:1rem">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Protected by Lumen Secure Pay
+            </div>
+          </aside>
+
+        </div>
+      </div>
+
+      <!-- Success view (populated by checkout.js) -->
+      <div id="successView" class="hidden"></div>
+
+    </div>
+  </section>
+</main>
+
+<footer id="site-footer"></footer>
+
+<!-- Processing overlay -->
+<div class="pay-overlay" id="payOverlay" role="status" aria-live="polite">
+  <div class="pay-overlay__box">
+    <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true"><circle cx="25" cy="25" r="20"></circle></svg>
+    <p>Processing your deposit…</p>
+    <small>Please don’t close this window</small>
+  </div>
+</div>
+
+<script>window.LUMEN_PAGE = "booking";</script>
+<script src="/demos/dental/assets/layout.js" defer></script>
+<script src="/demos/dental/assets/art.js" defer></script>
+<script src="/demos/dental/assets/app.js" defer></script>
+<script src="/demos/dental/assets/checkout.js" defer></script>
+</body>
+</html>

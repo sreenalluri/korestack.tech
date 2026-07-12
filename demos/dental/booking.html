@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book an Appointment — Lumen Dental Studio</title>
+<meta name="description" content="Reserve your visit at Lumen Dental Studio online in minutes. Choose a service and time, and secure your slot with a small deposit."/>
+<meta name="robots" content="noindex"/>
+<link rel="icon" href="/demos/dental/assets/favicon.svg" type="image/svg+xml"/>
+<meta name="theme-color" content="#10a294"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..600;1,9..144,400..500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/demos/dental/assets/styles.css"/>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+
+<main id="main">
+
+  <!-- Page hero -->
+  <section class="page-hero">
+    <div class="page-hero__bg"></div>
+    <div class="container">
+      <p class="crumbs reveal"><a href="/demos/dental/index.html">Home</a> › Book</p>
+      <span class="eyebrow reveal">Book online</span>
+      <h1 class="reveal" data-d="1">Reserve your visit in about two minutes</h1>
+      <p class="lead reveal" data-d="2">Pick a service and a time that works for you. A small deposit holds your slot and is applied straight to your treatment — no phone tag required.</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:1rem">
+    <div class="container">
+      <div class="checkout">
+
+        <!-- Booking form -->
+        <div class="form-card reveal">
+          <form id="bookingForm" class="form" novalidate>
+
+            <!-- Service -->
+            <div class="field" id="serviceField">
+              <label>1. What do you need? <span class="req">*</span></label>
+              <div class="choice-grid">
+                <label class="choice">
+                  <input type="radio" name="service" value="new-patient"/>
+                  <div class="choice__title">New Patient Exam <span class="choice__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+                  <div class="choice__meta">Exam, X-rays &amp; cleaning · 60 min · $50 deposit</div>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="service" value="checkup"/>
+                  <div class="choice__title">Routine Check-up <span class="choice__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+                  <div class="choice__meta">Returning patients · 45 min · $50 deposit</div>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="service" value="consult"/>
+                  <div class="choice__title">Cosmetic Consult <span class="choice__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+                  <div class="choice__meta">Whitening, veneers &amp; more · 45 min · $50 deposit</div>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="service" value="whitening"/>
+                  <div class="choice__title">Professional Whitening <span class="choice__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+                  <div class="choice__meta">In-office brightening · 60 min · $75 deposit</div>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="service" value="ortho"/>
+                  <div class="choice__title">Orthodontic Consult <span class="choice__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+                  <div class="choice__meta">Aligners &amp; braces · 45 min · $50 deposit</div>
+                </label>
+                <label class="choice">
+                  <input type="radio" name="service" value="emergency"/>
+                  <div class="choice__title">Emergency Visit <span class="choice__check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+                  <div class="choice__meta">Same-day urgent care · 30 min · $95 deposit</div>
+                </label>
+              </div>
+              <span class="err">Please choose the type of visit you need.</span>
+            </div>
+
+            <!-- Date + time -->
+            <div class="field">
+              <label for="bk-date">2. Preferred date <span class="req">*</span></label>
+              <input class="control" type="date" id="bk-date" name="date" required/>
+              <span class="err">Please choose a date.</span>
+            </div>
+
+            <div class="field" id="timeField">
+              <label>3. Preferred time <span class="req">*</span></label>
+              <div class="slots">
+                <button type="button" class="slot" data-time="8:00 AM">8:00 AM</button>
+                <button type="button" class="slot" data-time="9:00 AM">9:00 AM</button>
+                <button type="button" class="slot" data-time="10:30 AM" disabled>10:30 AM</button>
+                <button type="button" class="slot" data-time="11:15 AM">11:15 AM</button>
+                <button type="button" class="slot" data-time="1:00 PM">1:00 PM</button>
+                <button type="button" class="slot" data-time="2:30 PM">2:30 PM</button>
+                <button type="button" class="slot" data-time="4:00 PM">4:00 PM</button>
+                <button type="button" class="slot" data-time="5:15 PM">5:15 PM</button>
+              </div>
+              <input type="hidden" id="bk-time" name="time"/>
+              <span class="err">Please pick an available time.</span>
+              <span class="hint">Times shown are illustrative for this demo. Strikethrough = already booked.</span>
+            </div>
+
+            <hr class="divider"/>
+
+            <!-- Patient details -->
+            <div class="field">
+              <label for="bk-name">4. Full name <span class="req">*</span></label>
+              <input class="control" type="text" id="bk-name" name="name" autocomplete="name" placeholder="Jordan Rivera" required/>
+              <span class="err">Please enter your name.</span>
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="bk-email">Email <span class="req">*</span></label>
+                <input class="control" type="email" id="bk-email" name="email" autocomplete="email" placeholder="you@email.com" required/>
+                <span class="err">Please enter a valid email.</span>
+              </div>
+              <div class="field">
+                <label for="bk-phone">Mobile phone <span class="req">*</span></label>
+                <input class="control" type="tel" id="bk-phone" name="phone" autocomplete="tel" placeholder="(713) 555-0142" required/>
+                <span class="err">Please enter your phone number.</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="bk-notes">Anything we should know? <span class="hint" style="font-weight:400">(optional)</span></label>
+              <textarea class="control" id="bk-notes" name="notes" placeholder="Dental anxiety, insurance provider, specific concern…"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--lg btn--block">Continue to deposit &amp; confirm</button>
+            <p class="secure-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Your details are kept private. Next step is a secure deposit to hold your slot.</p>
+          </form>
+        </div>
+
+        <!-- Reassurance aside -->
+        <aside class="summary">
+          <div class="summary__card reveal" data-d="1">
+            <h3 style="font-size:var(--fs-h3);margin-bottom:1rem">What to expect</h3>
+            <div class="info-item" style="padding-top:0">
+              <div class="info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <div><h4>Small deposit</h4><p style="font-weight:400;color:var(--ink-soft);font-size:var(--fs-sm)">From $50, applied in full to your visit. Fully refundable up to 24 hours before.</p></div>
+            </div>
+            <div class="info-item">
+              <div class="info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3 7.18 2 2 0 0 1 5 5h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 12a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div><h4>Text confirmation</h4><p style="font-weight:400;color:var(--ink-soft);font-size:var(--fs-sm)">You’ll get an instant confirmation plus a reminder 48 hours before.</p></div>
+            </div>
+            <div class="info-item">
+              <div class="info-item__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a7 7 0 0 0-7 7c0 3 2 4 2 7a3 3 0 0 0 3 3h4a3 3 0 0 0 3-3c0-3 2-4 2-7a7 7 0 0 0-7-7z"/></svg></div>
+              <div><h4>Insurance welcome</h4><p style="font-weight:400;color:var(--ink-soft);font-size:var(--fs-sm)">We’re in-network with most PPO plans and verify your benefits for free.</p></div>
+            </div>
+          </div>
+
+          <div class="demo-banner reveal" data-d="2" style="margin-top:1rem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span>This is a <b>demo</b>. Submitting won’t create a real appointment — it moves you to a simulated payment screen.</span>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="site-footer"></footer>
+
+<script>window.LUMEN_PAGE = "booking";</script>
+<script src="/demos/dental/assets/layout.js" defer></script>
+<script src="/demos/dental/assets/art.js" defer></script>
+<script src="/demos/dental/assets/app.js" defer></script>
+</body>
+</html>

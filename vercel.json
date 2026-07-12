@@ -7,6 +7,7 @@
     { "source": "/local-seo", "destination": "/index.html" },
     { "source": "/managed-hosting", "destination": "/index.html" },
     { "source": "/careers", "destination": "/index.html" },
-    { "source": "/contact", "destination": "/index.html" }
+    { "source": "/contact", "destination": "/index.html" },
+    { "source": "/demos/dental", "destination": "/demos/dental/index.html" }
   ]
 }
