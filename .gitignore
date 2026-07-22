@@ -12,3 +12,9 @@
 # Lead-gen pipeline lives in its own (private) repo — never publish it here.
 # It contains API keys (.env) and scraped prospect data (data/).
 korestack-pipeline/
+
+# Rejected hero-video candidates — kept locally for reference, not deployed.
+demos/chiro/assets/hero-bridge.mp4
+demos/chiro/assets/hero-blocks.mp4
+demos/chiro/assets/hero-blocks-v2.mp4
+demos/chiro/assets/hero-spine-v3.mp4

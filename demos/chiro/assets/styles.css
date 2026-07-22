@@ -1,10 +1,8 @@
 /* =============================================================================
-   LUMEN DENTAL STUDIO — Design System
-   A fictional dental practice built as a showcase demo for Korestack.
-   Vanilla CSS, no framework. Mobile-first, responsive, accessible.
-
-   This stylesheet intentionally has its OWN identity — a calm, clinical,
-   premium aesthetic — distinct from the Korestack marketing site.
+   TRUE NORTH CHIROPRACTIC — Design System
+   A fictional chiropractic studio built as a showcase demo for Korestack.
+   Derived from the Lumen Dental design system, re-skinned to a warm,
+   grounded sage/cream wellness aesthetic. Vanilla CSS, no framework.
 
    Table of contents:
      1.  Design tokens (color, type, spacing, shadow, motion)
@@ -34,33 +32,33 @@
  * 1. DESIGN TOKENS
  * ------------------------------------------------------------------ */
 :root {
-  /* --- Brand palette: calm, clinical, premium --- */
-  --ink:        #0d2230;   /* near-black slate — primary text & headings   */
-  --ink-soft:   #3a5563;   /* body text                                    */
-  --muted:      #6d8794;   /* captions, meta                               */
-  --faint:      #9db4bd;   /* placeholders, disabled                       */
+  /* --- Brand palette: warm, grounded, wellness --- */
+  --ink:        #23301f;   /* deep moss slate — primary text & headings    */
+  --ink-soft:   #46543f;   /* body text                                    */
+  --muted:      #75846c;   /* captions, meta                               */
+  --faint:      #a3b099;   /* placeholders, disabled                       */
 
-  --teal:       #10a294;   /* primary brand accent                         */
-  --teal-deep:  #0a7367;   /* hover / emphasis                             */
-  --teal-ink:   #0b4a44;   /* text on tint                                 */
-  --teal-050:   #e8f6f3;   /* lightest tint                                */
-  --teal-100:   #cdece6;
+  --teal:       #5d7d55;   /* primary brand accent (sage green)            */
+  --teal-deep:  #43613d;   /* hover / emphasis                             */
+  --teal-ink:   #33492e;   /* text on tint                                 */
+  --teal-050:   #eef3ea;   /* lightest tint                                */
+  --teal-100:   #d9e5d1;
 
-  --sky:        #46a9d9;   /* secondary cool accent                        */
-  --sky-050:    #e9f4fb;
+  --sky:        #b0855b;   /* secondary warm clay accent                   */
+  --sky-050:    #f6efe6;
 
-  --coral:      #f26a5a;   /* emergency / urgent accent                    */
-  --coral-050:  #fdecea;
-  --gold:       #eab24c;   /* rating stars, small highlights               */
+  --coral:      #cf6a4f;   /* urgent accent (terracotta)                   */
+  --coral-050:  #faeee9;
+  --gold:       #d9a648;   /* rating stars, small highlights               */
 
   /* --- Surfaces --- */
   --bg:         #ffffff;
-  --paper:      #fbfdfc;   /* app background — a hair warmer than white     */
-  --tint:       #f1f8f6;   /* alternating section background                */
-  --mint:       #e7f4f1;   /* soft brand section                           */
-  --ink-bg:     #0d2230;   /* dark section background                       */
-  --line:       #e3edef;   /* hairline borders                             */
-  --line-strong:#d2e0e2;
+  --paper:      #fbfaf5;   /* app background — warm cream                   */
+  --tint:       #f4f3ea;   /* alternating section background                */
+  --mint:       #ebefe2;   /* soft brand section                           */
+  --ink-bg:     #23301f;   /* dark section background                       */
+  --line:       #e6e8dc;   /* hairline borders                             */
+  --line-strong:#d5d9c8;
 
   /* --- Typography --- */
   --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
@@ -94,11 +92,11 @@
   --r-pill: 999px;
 
   /* --- Shadows: soft, diffuse, clinical --- */
-  --sh-xs: 0 1px 2px rgba(13,34,48,.06);
-  --sh-sm: 0 2px 8px rgba(13,34,48,.06);
-  --sh-md: 0 10px 30px -12px rgba(13,34,48,.18);
-  --sh-lg: 0 24px 60px -24px rgba(13,34,48,.28);
-  --sh-teal: 0 16px 40px -16px rgba(16,162,148,.45);
+  --sh-xs: 0 1px 2px rgba(35,48,31,.06);
+  --sh-sm: 0 2px 8px rgba(35,48,31,.06);
+  --sh-md: 0 10px 30px -12px rgba(35,48,31,.18);
+  --sh-lg: 0 24px 60px -24px rgba(35,48,31,.28);
+  --sh-teal: 0 16px 40px -16px rgba(93,125,85,.45);
 
   /* --- Motion --- */
   --ease: cubic-bezier(.22,.61,.36,1);
@@ -329,7 +327,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .nav__toggle { display: inline-flex; }
   .nav__drawer {
     display: block; position: fixed; inset: 0; z-index: 120;
-    background: rgba(13,34,48,.4); opacity: 0; pointer-events: none;
+    background: rgba(35,48,31,.4); opacity: 0; pointer-events: none;
     transition: opacity var(--t-med) var(--ease);
   }
   .nav__drawer.open { opacity: 1; pointer-events: auto; }
@@ -453,7 +451,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 /* Icon color variants */
 .i-teal  { background: var(--teal-050); color: var(--teal-deep); }
-.i-sky   { background: var(--sky-050);  color: #2b7fb0; }
+.i-sky   { background: var(--sky-050);  color: #8a6234; }
 .i-coral { background: var(--coral-050); color: #d84e3d; }
 .i-gold  { background: #fbf1dc; color: #b6821f; }
 
@@ -531,7 +529,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 .ba__label {
   position: absolute; bottom: 12px; z-index: 4; font-size: var(--fs-xs); font-weight: 700;
   letter-spacing: .1em; text-transform: uppercase; color: #fff; padding: 5px 11px; border-radius: var(--r-pill);
-  background: rgba(13,34,48,.55); backdrop-filter: blur(4px);
+  background: rgba(35,48,31,.55); backdrop-filter: blur(4px);
 }
 .ba__label--before { left: 12px; }
 .ba__label--after { right: 12px; z-index: 1; }
@@ -696,7 +694,7 @@ select.control { appearance: none; background-image: url("data:image/svg+xml,%3C
 }
 .demo-banner svg { width: 18px; height:18px; color: var(--teal-deep); flex:none; }
 .demo-banner b { font-weight: 700; }
-.demo-banner code { background: rgba(16,162,148,.12); padding: 2px 7px; border-radius: 6px; font-size: .82rem; font-weight:600; color: var(--teal-ink); }
+.demo-banner code { background: rgba(93,125,85,.12); padding: 2px 7px; border-radius: 6px; font-size: .82rem; font-weight:600; color: var(--teal-ink); }
 
 /* secure row */
 .secure-row { display:flex; align-items:center; justify-content:center; gap: 8px; font-size: var(--fs-xs); color: var(--muted); margin-top: var(--sp-4); }
@@ -737,7 +735,7 @@ select.control { appearance: none; background-image: url("data:image/svg+xml,%3C
  * ------------------------------------------------------------------ */
 .pill { display:inline-flex; align-items:center; gap: 7px; font-size: var(--fs-xs); font-weight: 700; letter-spacing: .04em; padding: 6px 13px; border-radius: var(--r-pill); }
 .pill--teal { background: var(--teal-050); color: var(--teal-deep); }
-.pill--sky { background: var(--sky-050); color:#2b7fb0; }
+.pill--sky { background: var(--sky-050); color:#8a6234; }
 .pill--coral { background: var(--coral-050); color:#d84e3d; }
 .pill--gold { background:#fbf1dc; color:#b6821f; }
 .pill svg { width: 14px; height: 14px; }
