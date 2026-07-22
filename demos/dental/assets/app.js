@@ -281,8 +281,34 @@
     });
   }
 
+  /* ---------- hero video: iOS Safari autoplay nudge -------------------- *
+   * iOS refuses autoplay in Low Power Mode / Data Saver even with
+   * muted+playsinline, and won't paint a first frame without a poster.
+   * We set muted via the property (more reliable than the attribute in
+   * some iOS versions), retry play() once metadata is ready, and retry
+   * again on the first touch if it was blocked. The poster covers the
+   * card whenever playback never starts. */
+  function initHeroVideo() {
+    var vid = document.querySelector("[data-hero-video]");
+    if (!vid) return;
+    vid.muted = true;            // property, not just attribute
+    vid.setAttribute("muted", "");
+    function tryPlay() {
+      var p = vid.play();
+      if (p && p.catch) p.catch(function () { /* blocked — poster stays */ });
+    }
+    if (vid.readyState >= 2) tryPlay();
+    vid.addEventListener("loadeddata", tryPlay, { once: true });
+    // One retry on first interaction (covers Low Power Mode).
+    document.addEventListener("touchstart", function retry() {
+      if (vid.paused) tryPlay();
+      document.removeEventListener("touchstart", retry);
+    }, { once: true, passive: true });
+  }
+
   /* ---------- boot ---------------------------------------------------- */
   function boot() {
+    initHeroVideo();
     initReveal();
     initCounters();
     initBeforeAfter();
